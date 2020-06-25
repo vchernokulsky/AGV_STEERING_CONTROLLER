@@ -3,4 +3,8 @@
 .cproject
 .mxproject
 .project
+.settings/
+
+Debug/
+DiscoveryF4RobotController Debug.launch
 
