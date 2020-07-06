@@ -50,8 +50,7 @@
 
 
 class SetUpHelper {
-//private:
-public:
+private:
 	static I2C_HandleTypeDef *mem_out;
 	uint8_t message_out[MAX_SETTING_SIZE];
 
