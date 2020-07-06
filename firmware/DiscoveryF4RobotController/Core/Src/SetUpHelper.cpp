@@ -31,6 +31,8 @@
 	memcpy((topic) + message_out[(offset)], (null_char), sizeof((null_char))); \
 	(offset) = (offset) + message_out[(offset)] + 1;
 
+#define GET_DHCP_CONFIG(offset) (bool) message_out[offset]
+
 I2C_HandleTypeDef *SetUpHelper::mem_out = nullptr;
 SemaphoreHandle_t SetUpHelper::semaphore;
 bool SetUpHelper::is_default = false;
@@ -259,6 +261,9 @@ void SetUpHelper::extract_variables()
 	GET_IP(LOCAL_IP_OFFSET, LOCAL_IP_ADDRESS);
 	GET_IP(NETWORK_MASK_OFFSET, NETWORK_MASK);
 	GET_IP(GATEAWAY_OFFSET, GATEAWAY);
+
+	USE_DHCP = GET_DHCP_CONFIG(DHCP_CONFIG_OFFSET);
+
 	ROS_CLIENT_PORT = GET_NUM(ROS_CLIENT_PORT_OFFSET);
 	SET_UP_SERVER_PORT = GET_NUM(SET_UP_SERVER_PORT_OFFSET);
 

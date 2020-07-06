@@ -7,7 +7,7 @@
 #include "System_config.h"
 
 
-
+#include <algorithm>
 
 static __attribute__ ((used,section(".user_heap_stack"))) uint8_t heap_sram1[32*1024];
 uint8_t heap_sram2[32*1024];
@@ -100,6 +100,9 @@ uint8_t* get_gateaway_ptr()
 	return settings.GATEAWAY;
 }
 
+bool is_use_dhcp() {
+	return settings.USE_DHCP;
+}
 void StartSocetClientTask(void *arg)
 {
 	socket_client.SocketClientTask();
@@ -151,4 +154,3 @@ void StartSetDefaultListenerRask(void *arg)
 {
 	settings.set_default_task();
 }
-

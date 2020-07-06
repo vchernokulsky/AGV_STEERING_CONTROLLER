@@ -1,0 +1,21 @@
+mainpp.cpp:32:6:void memory_setup()	40	static
+mainpp.cpp:55:6:void external_memory_init(I2C_HandleTypeDef*)	16	static
+mainpp.cpp:60:6:void threds_setup(TIM_HandleTypeDef*, TIM_HandleTypeDef*, TIM_HandleTypeDef*, TIM_HandleTypeDef*)	32	static
+mainpp.cpp:82:6:void set_default()	4	static
+mainpp.cpp:88:10:uint8_t* get_local_ip_ptr()	4	static
+mainpp.cpp:93:10:uint8_t* get_network_mask_ptr()	4	static
+mainpp.cpp:98:10:uint8_t* get_gateaway_ptr()	4	static
+mainpp.cpp:103:6:bool is_use_dhcp()	4	static
+mainpp.cpp:106:6:void StartSocetClientTask(void*)	16	static
+mainpp.cpp:111:6:void StartSocetServerTask(void*)	16	static
+mainpp.cpp:116:6:void StartRosTask(void*)	16	static
+mainpp.cpp:121:6:void StartSetSpeedTask(void*)	16	static
+mainpp.cpp:125:6:void StartSetSpeedTask2(void*)	16	static
+mainpp.cpp:130:6:void StartEncoderTask(void*)	16	static
+mainpp.cpp:135:6:void StartEncoderTask2(void*)	16	static
+mainpp.cpp:140:6:void StartCmdvelTimeoutRask(void*)	16	static
+mainpp.cpp:145:6:void StartHardFaultHanlerTaskRask(void*)	16	static
+mainpp.cpp:153:6:void StartSetDefaultListenerRask(void*)	16	static
+mainpp.cpp:156:1:void __static_initialization_and_destruction_0(int, int)	16	static
+mainpp.cpp:156:1:cpp)	8	static
+mainpp.cpp:156:1:cpp)	8	static

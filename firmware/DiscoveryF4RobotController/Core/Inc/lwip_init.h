@@ -22,6 +22,10 @@
 
 
 /* Includes ------------------------------------------------------------------*/
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 #include "lwip/opt.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
@@ -30,6 +34,7 @@
 #include "lwip/netif.h"
 #include "lwip/timeouts.h"
 #include "ethernetif.h"
+#include <stdbool.h>
 
 #include "Default_settings.h"
 #include "System_config.h"
@@ -42,9 +47,16 @@
 /* Global Variables ----------------------------------------------------------*/
 extern ETH_HandleTypeDef heth;
 
-/* LWIP init function */	
-void LWIP_Init(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gateaway);
+/* LWIP init function */
+void LWIP_Init(bool use_dhcp);
+void LWIP_Init_static_routing(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gateaway);
+bool LWIP_Init_dynamic_routing(void);
 
+void setup_static_routing(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gateaway);
+void setup_network_interface();
+void finish_dhcp_setup(void const * argument);
 
-
+#ifdef __cplusplus
+}
+#endif
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

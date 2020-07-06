@@ -1,0 +1,6 @@
+lwip_init.c:50:6:LWIP_Init	40	static
+lwip_init.c:71:6:LWIP_Init_static_routing	24	static
+lwip_init.c:78:6:LWIP_Init_dynamic_routing	8	static
+lwip_init.c:103:6:finish_dhcp_setup	16	static
+lwip_init.c:107:6:setup_static_routing	24	static
+lwip_init.c:117:6:setup_network_interface	24	static

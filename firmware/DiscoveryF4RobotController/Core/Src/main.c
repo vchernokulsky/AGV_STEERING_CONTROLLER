@@ -27,6 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "mainpp.h"
+#include "lwip_init.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +59,7 @@ TIM_HandleTypeDef htim8;
 
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
-
+osTimerId dhcp_setup_timerHandle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -145,6 +146,8 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  osTimerDef(dhcp_setup_timer, finish_dhcp_setup);
+  dhcp_setup_timerHandle = osTimerCreate(osTimer(dhcp_setup_timer), osTimerOnce, NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
@@ -641,10 +644,11 @@ void StartDefaultTask(void const * argument)
   /* init code for LWIP */
 //  MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
-	  external_memory_init(&hi2c1);
-	  osDelay(100);
-	  LWIP_Init(get_local_ip_ptr(), get_network_mask_ptr(), get_gateaway_ptr());
-	  threds_setup(&htim3, &htim4, &htim8, &htim1) ;
+  external_memory_init(&hi2c1);
+  osDelay(100);
+  LWIP_Init(is_use_dhcp());
+  threds_setup(&htim3, &htim4, &htim8, &htim1) ;
+
   /* Infinite loop */
   for(;;)
   {

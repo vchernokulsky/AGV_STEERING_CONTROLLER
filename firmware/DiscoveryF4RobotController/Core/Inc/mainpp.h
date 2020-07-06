@@ -9,10 +9,9 @@
 #include <string.h>
 #include <stdarg.h>
 #include "cmsis_os.h"
-
+#include <stdbool.h>
 
 #include "stm32f4xx_hal.h"
-
 
 void memory_setup();
 void external_memory_init(I2C_HandleTypeDef *main_hi2c1);
@@ -22,6 +21,7 @@ void set_default();
 uint8_t* get_local_ip_ptr();
 uint8_t* get_network_mask_ptr();
 uint8_t* get_gateaway_ptr();
+bool    is_use_dhcp();
 
 #ifdef __cplusplus
 }
