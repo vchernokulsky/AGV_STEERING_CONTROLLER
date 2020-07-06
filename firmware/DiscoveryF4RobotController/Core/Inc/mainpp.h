@@ -21,6 +21,7 @@ void set_default();
 uint8_t* get_local_ip_ptr();
 uint8_t* get_network_mask_ptr();
 uint8_t* get_gateaway_ptr();
+void set_default_network_routing();
 bool    is_use_dhcp();
 
 #ifdef __cplusplus

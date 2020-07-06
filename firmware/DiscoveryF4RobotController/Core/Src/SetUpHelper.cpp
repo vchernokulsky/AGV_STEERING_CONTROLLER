@@ -234,17 +234,22 @@ uint16_t SetUpHelper::read_mem_size()
 
 void SetUpHelper::read_all()
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	if( xSemaphoreTake( SetUpHelper::semaphore, portMAX_DELAY) == pdTRUE )
 	{
 		if(is_set())
 		{
 			uint16_t mem_size = read_mem_size();
-			HAL_StatusTypeDef status = memory_read(mem_size);
+			status = memory_read(mem_size);
 			if (status == HAL_OK){
 				extract_variables();
 			}
 		}
 		xSemaphoreGive( SetUpHelper::semaphore );
+	}
+
+	if (status != HAL_OK) {
+		set_default_network_routing();
 	}
 }
 
@@ -343,4 +348,13 @@ void SetUpHelper::set_default_task()
 		osDelay(500);
 	}
 }
+void SetUpHelper::set_default_network_routing() {
+	uint8_t ip[] = DEFAULT_ROBOT_IP_ADRESS;
+	uint8_t mask[] = DEFAULT_NETWORK_MASK;
+	uint8_t gw[] = DEFAULT_GATEAWAY;
 
+	memcpy(LOCAL_IP_ADDRESS, ip, IP_SIZE);
+	memcpy(NETWORK_MASK, mask, IP_SIZE);
+	memcpy(GATEAWAY, gw, IP_SIZE);
+	USE_DHCP = DEFAULT_DHCP_CONFIG;
+}

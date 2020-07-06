@@ -4,6 +4,7 @@
 #define DEFAULT_ROBOT_IP_ADRESS {192, 168, 2, 114}
 #define DEFAULT_NETWORK_MASK {255, 255, 255, 0}
 #define DEFAULT_GATEAWAY {192, 168, 2, 1}
+#define DEFAULT_DHCP_CONFIG false
 #define DEFAULT_ROS_CLIENT_PORT 10888
 #define DEFAULT_SETUP_SERVER_PORT 11511
 /************************************************/

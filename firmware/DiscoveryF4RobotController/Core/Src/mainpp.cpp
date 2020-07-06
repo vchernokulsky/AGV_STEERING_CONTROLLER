@@ -154,3 +154,8 @@ void StartSetDefaultListenerRask(void *arg)
 {
 	settings.set_default_task();
 }
+
+void set_default_network_routing()
+{
+	settings.set_default_network_routing();
+}

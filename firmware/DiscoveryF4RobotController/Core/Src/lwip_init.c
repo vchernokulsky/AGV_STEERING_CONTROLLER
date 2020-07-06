@@ -38,6 +38,7 @@ uint8_t GATEWAY_ADDRESS[4];
 extern uint8_t* get_local_ip_ptr();
 extern uint8_t* get_network_mask_ptr();
 extern uint8_t* get_gateaway_ptr();
+extern void set_default_network();
 
 // from main.c
 extern osTimerId dhcp_setup_timerHandle;
@@ -64,6 +65,9 @@ void LWIP_Init(bool use_dhcp) {
 			uint8_t gw[] = DEFAULT_GATEAWAY;
 
 			LWIP_Init_static_routing((uint8_t*) ip, (uint8_t*) mask, (uint8_t*) gw);
+
+			// setting default settings to SetUpHelper on dhcp fail
+			set_default_network_routing();
 		}
 
 	}

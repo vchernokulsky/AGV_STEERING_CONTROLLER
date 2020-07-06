@@ -101,6 +101,8 @@ public:
 	void get_curr_memory(uint8_t *buff);
 	bool set(uint8_t *buff);
 	void set_default_task();
+
+	void set_default_network_routing();
 };
 
 #endif /* SETUPHELPER_H_ */
