@@ -358,3 +358,10 @@ void SetUpHelper::set_default_network_routing() {
 	memcpy(GATEAWAY, gw, IP_SIZE);
 	USE_DHCP = DEFAULT_DHCP_CONFIG;
 }
+
+void SetUpHelper::set_network_routing(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gateaway, bool use_dhcp) {
+	memcpy(LOCAL_IP_ADDRESS, local_ip, IP_SIZE);
+	memcpy(NETWORK_MASK, network_mask, IP_SIZE);
+	memcpy(GATEAWAY, gateaway, IP_SIZE);
+	USE_DHCP = use_dhcp;
+}

@@ -19,6 +19,8 @@
   
 /* Includes ------------------------------------------------------------------*/
 #include "lwip_init.h"
+#include "mainpp.h"
+
 #include "lwip/init.h"
 #include "lwip/netif.h"
 #include "lwip/dhcp.h"
@@ -35,10 +37,6 @@ uint8_t NETMASK_ADDRESS[4];
 uint8_t GATEWAY_ADDRESS[4];
 
 // from SetUpHelper.h
-extern uint8_t* get_local_ip_ptr();
-extern uint8_t* get_network_mask_ptr();
-extern uint8_t* get_gateaway_ptr();
-extern void set_default_network();
 
 // from main.c
 extern osTimerId dhcp_setup_timerHandle;
@@ -49,6 +47,8 @@ bool dhcp_setup_time_up;
   */
 
 void LWIP_Init(bool use_dhcp) {
+	tcpip_init( NULL, NULL );
+
 	if (!use_dhcp) {
 		LWIP_Init_static_routing(get_local_ip_ptr(), get_network_mask_ptr(), get_gateaway_ptr());
 	}
@@ -66,22 +66,22 @@ void LWIP_Init(bool use_dhcp) {
 
 			LWIP_Init_static_routing((uint8_t*) ip, (uint8_t*) mask, (uint8_t*) gw);
 
-			// setting default settings to SetUpHelper on dhcp fail
+			// if dhcp failed, setup default addresses in SetUpHelper
 			set_default_network_routing();
+			return;
 		}
-
+		//set addresses got from dhcp in SetUpHelper
+		set_network_routing((uint8_t*) &gnetif.ip_addr.addr, (uint8_t*) &gnetif.netmask.addr, (uint8_t*) &gnetif.gw.addr, true);
 	}
 }
 void LWIP_Init_static_routing(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gateaway)
 {
-	tcpip_init( NULL, NULL );
 	setup_static_routing(local_ip, network_mask, gateaway);
 	setup_network_interface();
 }
 
 bool LWIP_Init_dynamic_routing(void)
 {
-	tcpip_init( NULL, NULL );
 	ipaddr.addr = 0;
 	netmask.addr = 0;
 	gw.addr = 0;

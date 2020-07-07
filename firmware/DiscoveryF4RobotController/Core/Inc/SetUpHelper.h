@@ -103,6 +103,7 @@ public:
 	void set_default_task();
 
 	void set_default_network_routing();
+	void set_network_routing(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gateaway, bool use_dhcp);
 };
 
 #endif /* SETUPHELPER_H_ */
