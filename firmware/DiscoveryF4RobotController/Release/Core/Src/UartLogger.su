@@ -1,6 +1,0 @@
-UartLogger.cpp:26:1:UartLogger::~UartLogger()	0	static
-UartLogger.cpp:26:1:virtual UartLogger::~UartLogger()	8	static
-UartLogger.cpp:10:1:UartLogger::UartLogger()	0	static
-UartLogger.cpp:18:6:void UartLogger::log(const char*)	16	static
-UartLogger.cpp:14:6:void UartLogger::logBuildInformation()	0	static
-UartLogger.cpp:22:6:void UartLogger::setUart(UART_HandleTypeDef*)	0	static

@@ -1,8 +1,0 @@
-SocketServer.cpp:29:1:SocketServer::~SocketServer()	0	static
-SocketServer.cpp:29:1:virtual SocketServer::~SocketServer()	8	static
-SocketServer.cpp:13:1:SocketServer::SocketServer()	12	static
-SocketServer.cpp:19:6:void SocketServer::init(SetUpHelper*)	16	static
-SocketServer.cpp:33:6:void SocketServer::socket_receive(uint8_t*, uint16_t, uint32_t*)	16	static
-SocketServer.cpp:40:6:void SocketServer::socket_send(uint8_t*, uint16_t)	8	static
-SocketServer.cpp:46:6:void SocketServer::start_server()	8	static
-SocketServer.cpp:62:6:void SocketServer::SocketServerTask()	16	static
