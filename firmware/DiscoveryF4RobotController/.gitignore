@@ -6,5 +6,5 @@
 .settings/
 
 Debug/
-Release/
+# Release/
 DiscoveryF4RobotController Debug.launch
