@@ -5,7 +5,7 @@
 #include "SocketServer.h"
 #include "RosHelper.h"
 #include "System_config.h"
-
+#include "UartLogger.h"
 
 #include <algorithm>
 
@@ -27,6 +27,7 @@ SocketClient socket_client;
 SocketServer socket_server;
 RosHelper ros_helper;
 SetUpHelper settings;
+UartLogger uartLogger;
 
 /***** CALL IN 'USER CODE BEGIN(END) 1' *****/
 void memory_setup()
@@ -161,4 +162,12 @@ void set_default_network_routing()
 }
 void set_network_routing(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gateaway, bool use_dhcp) {
 	settings.set_network_routing(local_ip, network_mask, gateaway, use_dhcp);
+}
+
+void log_startup() {
+	uartLogger.logBuildInformation();
+}
+
+void init_UartLogger(UART_HandleTypeDef *huart) {
+	uartLogger.setUart(huart);
 }

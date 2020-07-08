@@ -1,0 +1,22 @@
+SetUpHelper.cpp:45:1:SetUpHelper::~SetUpHelper()	0	static
+SetUpHelper.cpp:45:1:virtual SetUpHelper::~SetUpHelper()	8	static
+SetUpHelper.cpp:40:1:SetUpHelper::SetUpHelper()	0	static
+SetUpHelper.cpp:60:6:void SetUpHelper::wait_for_readiness()	16	static
+SetUpHelper.cpp:78:6:void SetUpHelper::set_default_network()	8	static
+SetUpHelper.cpp:94:6:void SetUpHelper::set_default_robot_geometry()	0	static
+SetUpHelper.cpp:111:6:void SetUpHelper::set_default_topics_name()	64	static
+SetUpHelper.cpp:135:6:void SetUpHelper::calc_checksum()	8	static
+SetUpHelper.cpp:143:6:bool SetUpHelper::check_checksum(uint8_t*, uint16_t)	8	static
+SetUpHelper.cpp:152:6:void SetUpHelper::memory_write()	48	static
+SetUpHelper.cpp:170:19:HAL_StatusTypeDef SetUpHelper::memory_read(uint16_t)	48	static
+SetUpHelper.cpp:218:6:bool SetUpHelper::is_set()	40	static
+SetUpHelper.cpp:190:6:void SetUpHelper::set_default(bool)	24	static
+SetUpHelper.cpp:227:10:uint16_t SetUpHelper::read_mem_size()	32	static
+SetUpHelper.cpp:256:6:void SetUpHelper::extract_variables()	32	static
+SetUpHelper.cpp:305:6:void SetUpHelper::get_curr_memory(uint8_t*)	16	static
+SetUpHelper.cpp:314:6:bool SetUpHelper::set(uint8_t*)	24	static
+SetUpHelper.cpp:339:6:void SetUpHelper::set_default_task()	8	static
+SetUpHelper.cpp:351:6:void SetUpHelper::set_default_network_routing()	0	static
+SetUpHelper.cpp:235:6:void SetUpHelper::read_all()	16	static
+SetUpHelper.cpp:49:6:void SetUpHelper::memory_init(I2C_HandleTypeDef*)	8	static
+SetUpHelper.cpp:362:6:void SetUpHelper::set_network_routing(uint8_t*, uint8_t*, uint8_t*, bool)	0	static
