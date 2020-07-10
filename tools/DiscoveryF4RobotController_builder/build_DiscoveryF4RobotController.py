@@ -139,7 +139,7 @@ class FirmwareBuilder:
         if self.return_code == 0:
             if not self.start_version:
                 self._update_release_data()
-            self._fix_firmware_version()
+            self._commit_release_data()
         self._recover_firmware_version_pattern_in_src()
 
         if self.return_code == 0:
@@ -237,7 +237,7 @@ class FirmwareBuilder:
         else:
             self.release_data_manager.inc_patch(self.version.major, self.version.minor)
 
-    def _fix_firmware_version(self):
+    def _commit_release_data(self):
         with open(self.release_data, 'w') as f:
             json.dump(self.release_data_manager.get_release_data(), f)
 
