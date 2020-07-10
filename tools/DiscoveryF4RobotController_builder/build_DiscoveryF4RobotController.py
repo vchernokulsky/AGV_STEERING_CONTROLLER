@@ -110,7 +110,7 @@ class FirmwareBuilder:
 
     def build(self):
         self._prebuild()
-        # self._build()
+        self._build()
         self._postbuild()
 
     def _prebuild(self):
