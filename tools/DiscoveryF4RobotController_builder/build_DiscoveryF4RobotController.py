@@ -265,7 +265,7 @@ def parse_start_version(s):
               help=f'Path to {FirmwareBuilder.firmware_version_pattern} pattern holder')
 @click.option('--version', '-v', help=f'Use this option to release first project. '
                                       f'The first release will have this version and '
-                                      f'next ones will be recounted from this version.')
+                                      f'the next ones will be recounted from this version.')
 @click.option('--release_data', help=f'Release data is a json that stores release history. '
                                      f'If you\'re going to  make first release, then choose an appropriate file name. '
                                      f'The default name is \"DiscoveryF4RobotController.json\".')
