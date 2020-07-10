@@ -86,7 +86,7 @@ class FirmwareBuilder:
 
     def __init__(self, path_to_workspace, project, path_to_firmware_version_src,
                  release_data_json=None, major_opt=-1, minor_opt=-1, start_version=None):
-        self.path_to_workspace = path_to_workspace
+        self.path_to_workspace = os.path.expanduser(path_to_workspace)
         self.project = project
         self.path_to_firmware_version_src = os.path.expanduser(path_to_firmware_version_src)
         self.release_data = os.path.expanduser(release_data_json if release_data_json else self.default_release_data_json)
