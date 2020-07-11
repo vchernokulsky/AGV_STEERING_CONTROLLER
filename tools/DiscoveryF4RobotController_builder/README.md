@@ -1,6 +1,6 @@
 ## Релизная сборка прошивки
 
-<u> python3.6+ </u>.
+*python3.6+*
 
 Скрипт `build_DiscoveryF4RobotController.py` предназначен для сборки релизной прошивки с подстановкой её очередной версии. Скрипт использует утилиту STMCubeIDE `headless-build.sh` (`/opt/st/stm32cubeide_1.1.0/headless-build.sh`).
 
