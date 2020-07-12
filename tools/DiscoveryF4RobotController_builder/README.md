@@ -24,7 +24,7 @@ python3 build_DiscoveryF4RobotController.py -w <путь до workspace STMCubeI
 
 Выпустить новый major (major.0.0):
 ```bash
-python3 build_DiscoveryF4RobotController.py -w <путь до workspace STMCubeIDE> -p <проект в workspac STMCubeIDEe> -src <путь до файла с шаблоном версии>
+python3 build_DiscoveryF4RobotController.py -w <путь до workspace STMCubeIDE> -p <проект в workspace STMCubeIDEe> -src <путь до файла с шаблоном версии>
 ```
 
 Выпустить новый minor (major.new_minor.0):
