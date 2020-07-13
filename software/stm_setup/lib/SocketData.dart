@@ -29,17 +29,18 @@ class SocketData extends ChangeNotifier {
   final int localIpOffset = 6;
   final int networkMaskOffset = 10;
   final int gateAwayOffset = 14;
-  final int rosClientPortOffset = 18;
-  final int setupServerPortOffset = 20;
-  final int serialNodeIpOffset = 22;
-  final int serialNodePortOffset = 26;
+  final int dhcpConfigOffset = 18;
+  final int rosClientPortOffset = 19;
+  final int setupServerPortOffset = 21;
+  final int serialNodeIpOffset = 23;
+  final int serialNodePortOffset = 27;
 
-  final int wheelRadiusOffset = 28;
-  final int wheelSeparationOffset = 30;
-  final int maxLinVelocityOffset = 32;
-  final int maxAngVelocityOffset = 34;
-  final int radPerTickOffset = 36;
-  final int maxPwdAllowedOffset = 38;
+  final int wheelRadiusOffset = 29;
+  final int wheelSeparationOffset = 31;
+  final int maxLinVelocityOffset = 33;
+  final int maxAngVelocityOffset = 35;
+  final int radPerTickOffset = 37;
+  final int maxPwdAllowedOffset = 39;
 
   final int topicsOffset = 40;
 
