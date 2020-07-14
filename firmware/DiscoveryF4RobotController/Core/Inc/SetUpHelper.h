@@ -5,8 +5,8 @@
  *      Author: developer
  */
 
-#ifndef SETUPHELPER_H_
-#define SETUPHELPER_H_
+#ifndef INC_SETUPHELPER_H_
+#define INC_SETUPHELPER_H_
 
 #define DEVICE_ADDRESS 0x50 << 1
 #define DEFAULT_ADDRESS 0x0100
@@ -46,8 +46,7 @@
 #include <string.h>
 #include <Default_settings.h>
 #include "System_config.h"
-
-
+#include "SetUpHelperResponseBuilder.h"
 
 class SetUpHelper {
 private:
@@ -99,6 +98,7 @@ public:
 	virtual ~SetUpHelper();
 	void memory_init(I2C_HandleTypeDef *main_hi2c1);
 	void get_curr_memory(uint8_t *buff);
+	void get_setup_response(uint8_t *response, uint16_t *response_len);
 	bool set(uint8_t *buff);
 	void set_default_task();
 
@@ -106,4 +106,4 @@ public:
 	void set_network_routing(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gateaway, bool use_dhcp);
 };
 
-#endif /* SETUPHELPER_H_ */
+#endif /* INC_SETUPHELPER_H_ */

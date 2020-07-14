@@ -8,14 +8,13 @@
 #ifndef INC_UARTLOGGER_H_
 #define INC_UARTLOGGER_H_
 
-#include "BuildInformation.h"
-
 #include <string.h>
 #include "stm32f4xx_hal.h"
 
+#include "BuildInformation.h"
+
 class UartLogger {
 	UART_HandleTypeDef *huart;
-	const char *buildInfo = BUILD_INFORMATION;
 public:
 	UartLogger();
 

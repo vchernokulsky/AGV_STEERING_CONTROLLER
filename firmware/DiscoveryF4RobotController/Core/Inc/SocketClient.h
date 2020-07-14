@@ -17,8 +17,8 @@
 #include "System_config.h"
 
 
-#ifndef SOCKETCLIENT_H_
-#define SOCKETCLIENT_H_
+#ifndef INC_SOCKETCLIENT_H_
+#define INC_SOCKETCLIENT_H_
 
 #define OK_STATUS 0
 #define WARNING_STATUS 1
@@ -56,4 +56,4 @@ public:
 	void SocketClientTask();
 };
 
-#endif /* SOCKETHELPER_H_ */
+#endif /* INC_SOCKETHELPER_H_ */

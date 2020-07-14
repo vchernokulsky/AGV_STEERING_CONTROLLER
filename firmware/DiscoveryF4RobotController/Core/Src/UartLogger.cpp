@@ -12,7 +12,7 @@ UartLogger::UartLogger() {
 }
 
 void UartLogger::logBuildInformation(void) {
-	log(buildInfo);
+	log(build_info::buildInfo);
 }
 
 void UartLogger::log(const char *str) {

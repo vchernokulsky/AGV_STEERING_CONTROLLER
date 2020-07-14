@@ -1,5 +1,5 @@
-#ifndef MAINPP_H_
-#define MAINPP_H_
+#ifndef INC_MAINPP_H_
+#define INC_MAINPP_H_
 
 #ifdef __cplusplus
  extern "C" {
@@ -32,4 +32,4 @@ bool    is_use_dhcp();
 #endif
 
 
-#endif /* MAINPP_H_ */
+#endif /* INC_MAINPP_H_ */
