@@ -12,6 +12,7 @@
 #include "cmsis_os.h"
 
 #include "BuildInformation.h"
+#include "SetUpHelper.h"
 
 class SetUpHelperResponseBuilder {
 public:
