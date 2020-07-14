@@ -81,7 +81,8 @@ class ReleaseDataManager:
 
 
 class FirmwareBuilder:
-    firmware_version_pattern = '#define FIRMWARE_VERSION \"v0.0.0\"'
+    firmware_version_str_pattern = '#define FIRMWARE_VERSION_STR \"v0.0.0\"'
+    firmware_version_buf_pattern = '#define FIRMWARE_VERSION_BUF {0, 0, 0}'
     default_release_data_json = 'DiscoveryF4RobotController.json'
 
     def __init__(self, path_to_workspace, project, path_to_firmware_version_src,
@@ -89,7 +90,8 @@ class FirmwareBuilder:
         self.path_to_workspace = os.path.expanduser(path_to_workspace)
         self.project = project
         self.path_to_firmware_version_src = os.path.expanduser(path_to_firmware_version_src)
-        self.release_data = os.path.expanduser(release_data_json if release_data_json else self.default_release_data_json)
+        self.release_data = os.path.expanduser(
+            release_data_json if release_data_json else self.default_release_data_json)
         self.major_opt = major_opt
         self.minor_opt = minor_opt
         self.start_version = start_version
@@ -123,6 +125,7 @@ class FirmwareBuilder:
             self._check_version_options()
             self._upgrade_firmware_version()
 
+        self._make_replacement_patterns()
         self._put_firmware_version()
 
     def _build(self):
@@ -177,14 +180,17 @@ class FirmwareBuilder:
         with open(self.path_to_firmware_version_src, 'r') as f:
             self.firmware_version_src_content = f.read()
 
-        self.firmware_version_pattern_pos = self.firmware_version_src_content.find(self.firmware_version_pattern)
+        self.firmware_version_str_pattern_pos = self.firmware_version_src_content.find(self.firmware_version_str_pattern)
 
-        if self.firmware_version_pattern_pos == -1:
-            print(f'there is no {self.firmware_version_pattern} pattern in {self.path_to_firmware_version_src}')
+        if self.firmware_version_str_pattern_pos == -1:
+            print(f'there is no {self.firmware_version_str_pattern} pattern in {self.path_to_firmware_version_src}')
             sys.exit(1)
 
-        self.version_end_pos = self.firmware_version_pattern_pos + len(self.firmware_version_pattern) - 1
-        self.version_begin_pos = self.version_end_pos - 5
+        self.firmware_version_buf_pattern_pos = self.firmware_version_src_content.find(self.firmware_version_buf_pattern)
+
+        if self.firmware_version_buf_pattern_pos == -1:
+            print(f'there is no {self.firmware_version_buf_pattern} pattern in {self.path_to_firmware_version_src}')
+            sys.exit(1)
 
     def _read_release_data(self):
         with open(self.release_data, 'r') as f:
@@ -219,11 +225,16 @@ class FirmwareBuilder:
             new_patch = self.release_data_manager.get_last_patch(self.major_opt, self.minor_opt) + 1
             self.version = Version(self.major_opt, self.minor_opt, new_patch)
 
+    def _make_replacement_patterns(self):
+        self.firmware_version_str_replacement_pattern = f'#define FIRMWARE_VERSION_STR \"v{self.version.major}.{self.version.minor}.{self.version.patch}\"'
+        self.firmware_version_buf_replacement_pattern = '#define FIRMWARE_VERSION_BUF {' + \
+                                                        f'{self.version.major}, {self.version.minor}, {self.version.patch}' + '}'
+
     def _put_firmware_version(self):
-        self.firmware_version_src_content = self.firmware_version_src_content[:self.firmware_version_pattern_pos] + \
-                                            f'#define FIRMWARE_VERSION \"v{self.version.major}.{self.version.minor}.{self.version.patch}\"' + \
-                                            self.firmware_version_src_content[
-                                            self.firmware_version_pattern_pos + len(self.firmware_version_pattern):]
+        self.firmware_version_src_content = self.firmware_version_src_content\
+            .replace(self.firmware_version_str_pattern, self.firmware_version_str_replacement_pattern, 1)\
+            .replace(self.firmware_version_buf_pattern, self.firmware_version_buf_replacement_pattern, 1)
+
         with open(self.path_to_firmware_version_src, 'w') as f:
             f.write(self.firmware_version_src_content)
 
@@ -242,12 +253,9 @@ class FirmwareBuilder:
             json.dump(self.release_data_manager.get_release_data(), f)
 
     def _recover_firmware_version_pattern_in_src(self):
-        replace_len = len(
-            f'#define FIRMWARE_VERSION \"v{self.version.major}.{self.version.minor}.{self.version.patch}\"')
-        self.firmware_version_src_content = self.firmware_version_src_content[:self.firmware_version_pattern_pos] + \
-                                            self.firmware_version_pattern + \
-                                            self.firmware_version_src_content[
-                                            self.firmware_version_pattern_pos + replace_len:]
+        self.firmware_version_src_content = self.firmware_version_src_content\
+            .replace(self.firmware_version_str_replacement_pattern,self.firmware_version_str_pattern, 1)\
+            .replace(self.firmware_version_buf_replacement_pattern, self.firmware_version_buf_pattern, 1)
 
         with open(self.path_to_firmware_version_src, 'w') as f:
             f.write(self.firmware_version_src_content)
@@ -262,7 +270,7 @@ def parse_start_version(s):
 @click.option('--workspace', '-w', required=True, help='Path to STM32CubeIDE workspace.')
 @click.option('--project', '-p', required=True, help='Path to project in STM32CubeIDE workspace.')
 @click.option('--version_src', '-src', required=True,
-              help=f'Path to {FirmwareBuilder.firmware_version_pattern} pattern holder')
+              help=f'Path to {FirmwareBuilder.firmware_version_str_pattern} pattern holder')
 @click.option('--version', '-v', help=f'Use this option to release first project. '
                                       f'The first release will have this version and '
                                       f'the next ones will be recounted from this version.')
