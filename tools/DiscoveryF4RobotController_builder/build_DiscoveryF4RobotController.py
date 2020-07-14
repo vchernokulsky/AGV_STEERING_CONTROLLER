@@ -270,7 +270,7 @@ def parse_start_version(s):
 @click.option('--workspace', '-w', required=True, help='Path to STM32CubeIDE workspace.')
 @click.option('--project', '-p', required=True, help='Path to project in STM32CubeIDE workspace.')
 @click.option('--version_src', '-src', required=True,
-              help=f'Path to {FirmwareBuilder.firmware_version_str_pattern} pattern holder')
+              help=f'Path to {FirmwareBuilder.firmware_version_str_pattern}, {FirmwareBuilder.firmware_version_buf_pattern} patterns holder')
 @click.option('--version', '-v', help=f'Use this option to release first project. '
                                       f'The first release will have this version and '
                                       f'the next ones will be recounted from this version.')
