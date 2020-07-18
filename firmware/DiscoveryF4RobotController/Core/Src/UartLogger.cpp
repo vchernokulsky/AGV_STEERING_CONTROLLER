@@ -40,7 +40,7 @@ void UartLogger::logStartup(SetUpHelper *main_settings, struct netif *gnetif, en
 }
 
 void UartLogger::logEeprom(SetUpHelper *main_settings) {
-	log("EEPROM init: ");
+	log(eepromHeader);
 	log(main_settings->status == HAL_OK ? "successfully" : "failed");
 }
 

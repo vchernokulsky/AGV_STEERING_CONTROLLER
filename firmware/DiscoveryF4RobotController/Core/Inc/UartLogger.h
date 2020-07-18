@@ -24,6 +24,8 @@ class UartLogger {
 
 	const char *vendorMsg = "Vendor: IntemsLab";
 
+	const char *eepromHeader = "EEPROM init: ";
+
 	// Network headers
 	const char *macHeader = "MAC address: ";
 	const char *localIpHeader = "Local IP: ";
