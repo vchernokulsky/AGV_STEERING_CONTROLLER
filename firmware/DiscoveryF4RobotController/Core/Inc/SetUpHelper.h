@@ -77,7 +77,6 @@ public:
 	uint8_t LOCAL_IP_ADDRESS[IP_SIZE];
 	uint8_t NETWORK_MASK[IP_SIZE];
 	uint8_t GATEAWAY[IP_SIZE];
-	uint8_t MAC_ADDRESS[6];
 
 	uint16_t ROS_CLIENT_PORT;
 	uint16_t SET_UP_SERVER_PORT;
