@@ -6,7 +6,7 @@
 #include "RosHelper.h"
 #include "System_config.h"
 #include "UartLogger.h"
-
+#include "lwip_init.h"
 #include <algorithm>
 
 static __attribute__ ((used,section(".user_heap_stack"))) uint8_t heap_sram1[32*1024];
@@ -22,12 +22,18 @@ void StartEncoderTask2(void *arg);
 void StartCmdvelTimeoutRask(void *arg);
 void StartHardFaultHanlerTaskRask(void *arg);
 void StartSetDefaultListenerRask(void *arg);
+void StartNetworkInterfaceStateTask(void *arg);
 
 SocketClient socket_client;
 SocketServer socket_server;
 RosHelper ros_helper;
 SetUpHelper settings;
 UartLogger uartLogger;
+
+extern struct netif gnetif;
+extern ETH_HandleTypeDef heth;
+
+enum CableState cableState;
 
 /***** CALL IN 'USER CODE BEGIN(END) 1' *****/
 void memory_setup()
@@ -53,6 +59,30 @@ void memory_setup()
  *
  * after LWIP_Init() call threads_setup() to run ROS
  * */
+void run_app(UART_HandleTypeDef *huart, I2C_HandleTypeDef *main_hi2c1,
+		TIM_HandleTypeDef *main_htim, TIM_HandleTypeDef *main_htim2,
+		TIM_HandleTypeDef *encoder_htim, TIM_HandleTypeDef *encoder_htim2) {
+
+	uartLogger.setUart(huart);
+	uartLogger.logBuildInformation();
+	uartLogger.logNewLine();
+	uartLogger.logVendor();
+	uartLogger.logNewLine();
+
+	external_memory_init(main_hi2c1);
+	osDelay(100);
+	uartLogger.logEeprom(&settings);
+	uartLogger.logNewLine();
+
+	LWIP_Init(settings.USE_DHCP);
+	uartLogger.logNetwork(&settings, &gnetif, cableState);
+	uartLogger.logNewLine();
+
+	threds_setup(main_htim, main_htim2, encoder_htim, encoder_htim2) ;
+	uartLogger.logRos(&settings);
+	uartLogger.logNewLine();
+}
+
 void external_memory_init(I2C_HandleTypeDef *main_hi2c1)
 {
 	settings.memory_init(main_hi2c1);
@@ -101,9 +131,6 @@ uint8_t* get_gateaway_ptr()
 	return settings.GATEAWAY;
 }
 
-bool is_use_dhcp() {
-	return settings.USE_DHCP;
-}
 void StartSocetClientTask(void *arg)
 {
 	socket_client.SocketClientTask();
@@ -164,10 +191,10 @@ void set_network_routing(uint8_t *local_ip, uint8_t *network_mask, uint8_t *gate
 	settings.set_network_routing(local_ip, network_mask, gateaway, use_dhcp);
 }
 
-void log_startup() {
-	uartLogger.logBuildInformation();
-}
+void updateCableState(void) {
+	uint32_t regvalue = 0;
+	HAL_ETH_ReadPHYRegister(&heth, PHY_BSR, &regvalue);
+	regvalue &= PHY_LINKED_STATUS;
 
-void init_UartLogger(UART_HandleTypeDef *huart) {
-	uartLogger.setUart(huart);
+	cableState = regvalue ? cablePluggedIn : cablePluggedOff;
 }

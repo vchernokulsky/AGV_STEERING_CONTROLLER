@@ -681,13 +681,7 @@ void StartDefaultTask(void const * argument)
   /* init code for LWIP */
 //  MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
-  osDelay(5000);
-  init_UartLogger(&huart3);
-  log_startup();
-  external_memory_init(&hi2c1);
-  osDelay(100);
-  LWIP_Init(is_use_dhcp());
-  threds_setup(&htim3, &htim4, &htim8, &htim1) ;
+  run_app(&huart3, &hi2c1, &htim3, &htim4, &htim8, &htim1);
   /* Infinite loop */
   for(;;)
   {

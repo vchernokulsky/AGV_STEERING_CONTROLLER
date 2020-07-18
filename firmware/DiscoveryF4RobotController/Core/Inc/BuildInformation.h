@@ -17,9 +17,9 @@
 #define FIRMWARE_VERSION_BUF_LEN 3
 
 #ifdef DEBUG
-	#define BUILD_INFORMATION "Firmware: debug\n"
+	#define BUILD_INFORMATION "Firmware: debug"
 #else
-	#define BUILD_INFORMATION "Firmware: release " FIRMWARE_VERSION_STR "\n"
+	#define BUILD_INFORMATION "Firmware: release " FIRMWARE_VERSION_STR
 #endif
 
 namespace build_info {

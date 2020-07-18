@@ -89,6 +89,10 @@ bool LWIP_Init_dynamic_routing(void)
 	setup_network_interface();
 
 	dhcp_setup_time_up = 0;
+	if (!netif_is_link_up(&gnetif)) {
+		return false;
+	}
+
 	dhcp_start(&gnetif);
 
 	osTimerStart(dhcp_setup_timerHandle, DHCP_SETUP_TIMEOUT);

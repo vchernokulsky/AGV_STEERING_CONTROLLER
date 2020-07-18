@@ -9,7 +9,7 @@
 
 #define PUT_IP(offset, val) \
 	memcpy(message_out + (offset), (val), IP_SIZE);
-
+#define PUT_DHCP_CONFIG(offset, config) message_out[offset] = config ? 1: 0
 #define PUT_NUM(offset, val) \
 	message_out[(offset)] = (val) & 0xFF; \
 	message_out[(offset)+1] = (val) >> 8;
@@ -85,6 +85,7 @@ void SetUpHelper::set_default_network()
 	PUT_IP(LOCAL_IP_OFFSET, ip);
 	PUT_IP(NETWORK_MASK_OFFSET, mask);
 	PUT_IP(GATEAWAY_OFFSET, gw);
+	PUT_DHCP_CONFIG(DHCP_CONFIG_OFFSET, DEFAULT_DHCP_CONFIG);
 	PUT_NUM(ROS_CLIENT_PORT_OFFSET, DEFAULT_ROS_CLIENT_PORT);
 	PUT_NUM(SET_UP_SERVER_PORT_OFFSET, DEFAULT_SETUP_SERVER_PORT);
 	PUT_IP(SERIALNODE_IP_OFFSET, sn_ip);
@@ -234,7 +235,7 @@ uint16_t SetUpHelper::read_mem_size()
 
 void SetUpHelper::read_all()
 {
-	HAL_StatusTypeDef status = HAL_OK;
+	status = HAL_OK;
 	if( xSemaphoreTake( SetUpHelper::semaphore, portMAX_DELAY) == pdTRUE )
 	{
 		if(is_set())
