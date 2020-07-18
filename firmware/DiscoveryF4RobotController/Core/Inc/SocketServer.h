@@ -5,8 +5,8 @@
  *      Author: developer
  */
 
-#ifndef SOCKETSERVER_H_
-#define SOCKETSERVER_H_
+#ifndef INC_SOCKETSERVER_H_
+#define INC_SOCKETSERVER_H_
 
 #include "stdint.h"
 #include "string.h"

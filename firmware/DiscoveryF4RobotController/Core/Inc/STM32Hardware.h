@@ -32,8 +32,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ROS_STM32_HARDWARE_H_
-#define ROS_STM32_HARDWARE_H_
+#ifndef INC_ROS_STM32_HARDWARE_H_
+#define INC_ROS_STM32_HARDWARE_H_
 
 #include "stm32f4xx_hal.h"
 

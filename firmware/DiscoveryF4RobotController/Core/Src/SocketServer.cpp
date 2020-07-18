@@ -74,8 +74,9 @@ void SocketServer::SocketServerTask()
 				socket_receive(recv_buffer, MAX_SETTING_SIZE,&rdmaInd);
 				if(recv_buffer[0] == 255 && recv_buffer[1] == 255)
 				{
-					settings->get_curr_memory(send_buffer);
-					socket_send(send_buffer, settings->msg_length);
+					uint16_t response_len;
+					settings->get_setup_response(send_buffer, &response_len);
+					socket_send(send_buffer, response_len);
 				} else
 				{
 					if(recv_buffer[0] == 255 && recv_buffer[1] == 254)

@@ -1,5 +1,5 @@
-#ifndef MAINPP_H_
-#define MAINPP_H_
+#ifndef INC_MAINPP_H_
+#define INC_MAINPP_H_
 
 #ifdef __cplusplus
  extern "C" {
@@ -17,6 +17,8 @@ void memory_setup();
 void external_memory_init(I2C_HandleTypeDef *main_hi2c1);
 void threds_setup(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_htim2, TIM_HandleTypeDef *encoder_htim, TIM_HandleTypeDef *encoder_htim2);
 void set_default();
+void log_startup();
+void init_UartLogger(UART_HandleTypeDef *huart);
 
 uint8_t* get_local_ip_ptr();
 uint8_t* get_network_mask_ptr();
@@ -30,4 +32,4 @@ bool    is_use_dhcp();
 #endif
 
 
-#endif /* MAINPP_H_ */
+#endif /* INC_MAINPP_H_ */

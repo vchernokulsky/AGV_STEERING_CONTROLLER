@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:stm_setup/AboutDiffDrive.dart';
 import 'package:stm_setup/RobotConnect.dart';
 import 'package:stm_setup/RobotGeometry.dart';
 import 'package:stm_setup/RosTopics.dart';
@@ -15,6 +16,7 @@ class _RobotSetUpState extends State<RobotSetUp> {
   static const int ROBOT_GEOM = 0;
   static const int ROS_TOPICS = 1;
   static const int WIZNET = 2;
+  static const int DIFF_DRIVE = 3;
 
   final model = SocketData();
   int curItem;
@@ -89,6 +91,10 @@ class _RobotSetUpState extends State<RobotSetUp> {
                   Visibility(
                     visible: curItem == WIZNET,
                     child: Wiznet(),
+                  ),
+                  Visibility(
+                    visible: curItem == DIFF_DRIVE,
+                    child: AboutDiffDrive(),
                   ),
                 ],
               ),
@@ -175,6 +181,25 @@ class _RobotSetUpState extends State<RobotSetUp> {
                 style: TextStyle(fontSize: 15),
               ),
               onTap: () => setWidgets(WIZNET),
+            ),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.transparent,
+//                backgroundImage: AssetImage("images/LogoWhite.png"),
+                child: Container(
+                    width: 100.0,
+                    height: 100.0,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            alignment: Alignment.center,
+                            image: AssetImage("images/about.png"),
+                            fit: BoxFit.fitWidth))),
+              ),
+              title: Text(
+                'About DiffDrive',
+                style: TextStyle(fontSize: 15),
+              ),
+              onTap: () => setWidgets(DIFF_DRIVE),
             ),
             ListTile(
                 leading: RaisedButton(

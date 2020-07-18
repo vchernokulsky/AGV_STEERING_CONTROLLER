@@ -51,6 +51,7 @@ flutter:
     - images/Vector.png
     - images/back3.png
     - images/LogoIcon.png
+    - images/about.png
 flutter_icons:
   ios: true
   android: "launcher_icon"

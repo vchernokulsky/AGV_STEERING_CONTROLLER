@@ -5,8 +5,8 @@
  *      Author: developer
  */
 
-#ifndef ROSHELPER_H_
-#define ROSHELPER_H_
+#ifndef INC_ROSHELPER_H_
+#define INC_ROSHELPER_H_
 
 #include <ros.h>
 #include "System_config.h"
@@ -47,4 +47,4 @@ public:
 	void cmdvelTimeoutTask();
 };
 
-#endif /* ROSHELPER_H_ */
+#endif /* INC_ROSHELPER_H_ */

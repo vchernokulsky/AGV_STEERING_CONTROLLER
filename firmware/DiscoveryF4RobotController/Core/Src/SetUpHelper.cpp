@@ -365,3 +365,11 @@ void SetUpHelper::set_network_routing(uint8_t *local_ip, uint8_t *network_mask, 
 	memcpy(GATEAWAY, gateaway, IP_SIZE);
 	USE_DHCP = use_dhcp;
 }
+
+void SetUpHelper::get_setup_response(uint8_t *response, uint16_t *response_len) {
+	if( xSemaphoreTake( SetUpHelper::semaphore, portMAX_DELAY) == pdTRUE )
+		{
+			SetUpHelperResponseBuilder::build_response(response, response_len, message_out, msg_length);
+			xSemaphoreGive( SetUpHelper::semaphore );
+		}
+}

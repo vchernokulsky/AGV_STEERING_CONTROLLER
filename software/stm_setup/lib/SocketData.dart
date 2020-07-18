@@ -8,6 +8,7 @@ import 'package:stm_setup/Inputs/DecimalInput.dart';
 import 'package:stm_setup/Inputs/MacInput.dart';
 import 'package:stm_setup/Inputs/NumericInput.dart';
 import 'package:stm_setup/Inputs/TopicNameInput.dart';
+import 'package:stm_setup/CustomListTile.dart';
 
 import 'Inputs/IpInput.dart';
 import 'ShowToast.dart';
@@ -17,6 +18,7 @@ class SocketData extends ChangeNotifier {
   final int chkSumSize = 1;
   final int minMsgSize = 45;
   final int maxMsgSize = 1065;
+  final int firmwareVersionSize = 3;
 
   final int setFlagSize = 3;
   final int ipSize = 4;
@@ -29,19 +31,22 @@ class SocketData extends ChangeNotifier {
   final int localIpOffset = 6;
   final int networkMaskOffset = 10;
   final int gateAwayOffset = 14;
-  final int rosClientPortOffset = 18;
-  final int setupServerPortOffset = 20;
-  final int serialNodeIpOffset = 22;
-  final int serialNodePortOffset = 26;
+  final int dhcpConfigOffset = 18;
+  final int rosClientPortOffset = 19;
+  final int setupServerPortOffset = 21;
+  final int serialNodeIpOffset = 23;
+  final int serialNodePortOffset = 27;
 
-  final int wheelRadiusOffset = 28;
-  final int wheelSeparationOffset = 30;
-  final int maxLinVelocityOffset = 32;
-  final int maxAngVelocityOffset = 34;
-  final int radPerTickOffset = 36;
-  final int maxPwdAllowedOffset = 38;
+  final int wheelRadiusOffset = 29;
+  final int wheelSeparationOffset = 31;
+  final int maxLinVelocityOffset = 33;
+  final int maxAngVelocityOffset = 35;
+  final int radPerTickOffset = 37;
+  final int maxPwdAllowedOffset = 39;
 
   final int topicsOffset = 40;
+
+  final int firmwareVersionOffset = 71;
 
   static String connectHost = "192.168.2.114";
   static int connectPort = 11511;
@@ -67,6 +72,8 @@ class SocketData extends ChangeNotifier {
   static String odomTopic = "";
   static String baseFrame = "";
   static String odomFrame = "";
+
+  static String firmwareVersion = "";
 
   void getInfo({bool force = false}) async {
     if (force || !getData) {
@@ -153,7 +160,6 @@ class SocketData extends ChangeNotifier {
   }
 
   void parseIntoVariables(Uint8List data) {
-
     if (data.length < minMsgSize || data.length > maxMsgSize) {
       return;
     }
@@ -171,9 +177,10 @@ class SocketData extends ChangeNotifier {
       chkSum += i;
       chkSum %= 256;
     }
-    if(chkSum != 255){
-      return;
-    }
+
+//    if(chkSum != 255){
+//      return;
+//    }
 
     localIpAddress = IpInput.bytesToString(
         data.sublist(localIpOffset, localIpOffset + ipSize));
@@ -244,5 +251,8 @@ class SocketData extends ChangeNotifier {
     odomFrame = TopicNameInput.bytesToString(
         data.sublist(curOffset, curOffset + strSize));
     curOffset += strSize;
+
+    firmwareVersion = CustomListTile.bytesToFirmwareVersion(
+        data.sublist(firmwareVersionOffset, firmwareVersionOffset + firmwareVersionSize));
   }
 }

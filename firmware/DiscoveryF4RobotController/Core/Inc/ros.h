@@ -32,8 +32,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _ROS_H_
-#define _ROS_H_
+#ifndef INC_ROS_H_
+#define INC_ROS_H_
 
 #include "ros/node_handle.h"
 #include "STM32Hardware.h"
