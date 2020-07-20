@@ -67,6 +67,7 @@ private:
 	void read_all();
 	void extract_variables();
 public:
+	HAL_StatusTypeDef status;
 	static SemaphoreHandle_t semaphore;
 	static bool is_default;
 	static bool reset_config;
@@ -76,6 +77,7 @@ public:
 	uint8_t LOCAL_IP_ADDRESS[IP_SIZE];
 	uint8_t NETWORK_MASK[IP_SIZE];
 	uint8_t GATEAWAY[IP_SIZE];
+
 	uint16_t ROS_CLIENT_PORT;
 	uint16_t SET_UP_SERVER_PORT;
 	uint8_t SERIALNODE_IP[IP_SIZE];
