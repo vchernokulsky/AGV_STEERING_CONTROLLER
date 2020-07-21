@@ -124,6 +124,22 @@ void UartLogger::logNetworkInterfaceState(struct netif *gnetif) {
 }
 
 void UartLogger::logRos(SetUpHelper *main_settings) {
+	log(rosClientPortHeader);
+	logInt(main_settings->ROS_CLIENT_PORT);
+	logNewLine();
+
+	log(setUpServerPortHeader);
+	logInt(main_settings->SET_UP_SERVER_PORT);
+	logNewLine();
+
+	log(serialNodeIpHeader);
+	logAddress(main_settings->SERIALNODE_IP);
+	logNewLine();
+
+	log(serialNodePortHeader);
+	logInt(main_settings->SERIALNODE_PORT);
+	logNewLine();
+
 	log(wheelRadiusHeader);
 	logFloat(main_settings->WHEEL_RADIUS);
 	logNewLine();

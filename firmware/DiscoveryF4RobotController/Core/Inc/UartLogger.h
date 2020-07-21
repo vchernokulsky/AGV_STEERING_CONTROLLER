@@ -35,7 +35,16 @@ class UartLogger {
 	const char *networkInterfaceHeader = "Network interface: ";
 	const char *CableHeader = "Cable: ";
 
+//	uint16_t ROS_CLIENT_PORT;
+//	uint16_t SET_UP_SERVER_PORT;
+//	uint8_t SERIALNODE_IP[IP_SIZE];
+//	uint16_t SERIALNODE_PORT;
 	// ROS headers
+	const char *rosClientPortHeader = "ROS client port: ";
+	const char *setUpServerPortHeader = "SetUp server port: ";
+	const char *serialNodeIpHeader = "SerialNode IP: : ";
+	const char *serialNodePortHeader = "SerialNode port: ";
+
 	const char *wheelRadiusHeader = "Wheel radius: ";
 	const char *wheelSeparationHeader = "Wheel separation: ";
 	const char *maxLinSpeedHeader = "Max linear speed: ";
