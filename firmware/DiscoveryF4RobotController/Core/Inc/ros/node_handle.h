@@ -519,34 +519,40 @@ public:
       return 0;
 
     /* serialize message */
-    int l = msg->serialize(message_out + 7);
+    int l = msg->serialize(message_out + 6);
 
     /* setup the header */
+//    message_out[0] = 0xff;
+//    message_out[1] = PROTOCOL_VER;
+//    message_out[2] = (uint8_t)((uint16_t)l & 255);
+//    message_out[3] = (uint8_t)((uint16_t)l >> 8);
+//    message_out[4] = 255 - ((message_out[2] + message_out[3]) % 256);
+//    message_out[5] = (uint8_t)((int16_t)id & 255);
+//    message_out[6] = (uint8_t)((int16_t)id >> 8);
     message_out[0] = 0xff;
     message_out[1] = PROTOCOL_VER;
     message_out[2] = (uint8_t)((uint16_t)l & 255);
     message_out[3] = (uint8_t)((uint16_t)l >> 8);
-    message_out[4] = 255 - ((message_out[2] + message_out[3]) % 256);
-    message_out[5] = (uint8_t)((int16_t)id & 255);
-    message_out[6] = (uint8_t)((int16_t)id >> 8);
-
+    message_out[4] = (uint8_t)((int16_t)id & 255);
+    message_out[5] = (uint8_t)((int16_t)id >> 8);
     /* calculate checksum */
-    int chk = 0;
-    for (int i = 5; i < l + 7; i++)
-      chk += message_out[i];
-    l += 7;
-    message_out[l++] = 255 - (chk % 256);
+//    int chk = 0;
+//    for (int i = 5; i < l + 7; i++)
+//      chk += message_out[i];
+//    l += 7;
+//    message_out[l++] = 255 - (chk % 256);
 
-    if (l <= OUTPUT_SIZE)
-    {
-      hardware_.write_stm32hw(message_out, l);
-      return l;
-    }
-    else
-    {
-      logerror("Message from device dropped: message larger than buffer.");
-      return -1;
-    }
+    hardware_.write_stm32hw(message_out, l + 6);
+//    if (l <= OUTPUT_SIZE)
+//    {
+//      hardware_.write_stm32hw(message_out, l);
+//      return l;
+//    }
+//    else
+//    {
+//      logerror("Message from device dropped: message larger than buffer.");
+//      return -1;
+//    }
   }
 
   /********************************************************************
