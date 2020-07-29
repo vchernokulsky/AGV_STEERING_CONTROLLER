@@ -53,6 +53,7 @@ class NodeHandleBase_
 public:
   virtual int publish(int id, const Msg* msg) = 0;
   virtual int spinOnce() = 0;
+  virtual bool connected() = 0;
 };
 }
 
@@ -180,7 +181,7 @@ public:
 		if (topic_ == 0) {
 			negotiateTopics();
 		} else {
-			subscribers[ - 100]->callback(message_in + 4); // первые 4 байта - id топика, затем сообщение
+			subscribers[topic_ - 100]->callback(message_in + 4); // первые 4 байта - id топика, затем сообщение
 		}
 	}
 
