@@ -69,14 +69,8 @@ class STM32Hardware {
 
     }
 
-    int read_stm32hw(){
-    	uint8_t c = -1;
-		socket_client.socket_receive(&c, (uint16_t)1, &rdmaInd);
-		if(rdmaInd > 0){
-			return c;
-		} else{
-			return -1;
-		}
+    void read_stm32hw(uint8_t *buf, uint16_t size){
+		socket_client.socket_receive_all(buf, size);
     }
 
 

@@ -51,7 +51,6 @@ void SocketClient::socket_receive(uint8_t *pData, uint16_t size, uint32_t* rdmaI
 			--err_count;
 		}
 	}
-
 }
 
 void SocketClient::socket_send(uint8_t *pData, uint16_t len)
@@ -149,4 +148,14 @@ uint8_t SocketClient::check_errno()
 		return ERROR_STATUS;
 	}
 	return UNKNOWN_STATUS;
+}
+
+void SocketClient::socket_receive_all(uint8_t *pData, uint16_t size) {
+	uint8_t msg_recv_data_counter = 0;
+	uint32_t rdmaInd = 0;
+
+	while(msg_recv_data_counter < size) {
+		socket_receive((uint8_t*) &pData[msg_recv_data_counter], size - msg_recv_data_counter, (uint32_t*) &rdmaInd);
+		msg_recv_data_counter += rdmaInd;
+	}
 }

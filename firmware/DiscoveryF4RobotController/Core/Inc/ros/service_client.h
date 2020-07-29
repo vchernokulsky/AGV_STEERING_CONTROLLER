@@ -56,11 +56,11 @@ public:
 
   virtual void call(const MReq & request, MRes & response)
   {
-    if (!pub.nh_->connected()) return;
+
     ret = &response;
     waiting = true;
     pub.publish(&request);
-    while (waiting && pub.nh_->connected())
+    while (waiting)
       if (pub.nh_->spinOnce() < 0) break;
   }
 
