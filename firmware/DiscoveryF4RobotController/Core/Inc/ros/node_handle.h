@@ -158,7 +158,6 @@ public:
   virtual int spinOnce()
   {
 	// Custom spinOnce
-	  configured_ = false;
 
 	  static uint16_t msg_len;
 	
@@ -166,7 +165,7 @@ public:
 		
 		hardware_.read_stm32hw((uint8_t*) &msg_len, 2);
 
-		if (msg_len > INPUT_SIZE) {
+		if (msg_len > INPUT_SIZE || msg_len <= 0) {
 			return SPIN_ERR;
 		}
 		
@@ -181,7 +180,7 @@ public:
 		if (topic_ == 0) {
 			negotiateTopics();
 		} else {
-			subscribers[topic_ - 100]->callback(message_in + 4); // первые 4 байта - id топика, затем сообщение
+			subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
 		}
 	}
 
