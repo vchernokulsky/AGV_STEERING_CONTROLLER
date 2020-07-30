@@ -274,8 +274,6 @@ void SetUpHelper::extract_variables()
 	SET_UP_SERVER_PORT = GET_NUM(SET_UP_SERVER_PORT_OFFSET);
 
 	GET_IP(SERIALNODE_IP_OFFSET, SERIALNODE_IP);
-	uint8_t serial_ip[] = {192, 168, 2, 101};
-	memcpy(SERIALNODE_IP, serial_ip, IP_SIZE);
 	SERIALNODE_PORT = GET_NUM(SERIALNODE_PORT_OFFSET);
 
 	uint16_t radius_mm =  GET_NUM(WHEEL_RADIUS_OFFSET);
