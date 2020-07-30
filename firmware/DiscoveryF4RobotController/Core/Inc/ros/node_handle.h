@@ -182,12 +182,23 @@ public:
 		if (topic_ == TopicInfo::ID_TIME) {
 			syncTime(message_in);
 		}
+		else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
+			req_param_resp.deserialize(message_in);
+			param_recieved = true;
+		}
 		else if (topic_ == 0) {
 			requestSyncTime();
 			negotiateTopics();
 			last_sync_receive_time = c_time;
-		} else {
-			subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
+			return SPIN_ERR;
+		}
+		else if (topic_ == TopicInfo::ID_TX_STOP) {
+		    configured_ = false;
+		}
+		else {
+			if (subscribers[topic_ - 100]) {
+				subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
+			}
 		}
 	}
 
