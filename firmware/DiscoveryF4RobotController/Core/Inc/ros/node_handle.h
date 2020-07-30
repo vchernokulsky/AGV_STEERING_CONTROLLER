@@ -69,6 +69,9 @@ namespace ros
 
 const int SPIN_OK = 0;
 const int SPIN_ERR = -1;
+const int SPIN_TIMEOUT = -2;
+
+const uint8_t SYNC_SECONDS  = 5;
 
 using rosserial_msgs::TopicInfo;
 
@@ -125,6 +128,7 @@ public:
     req_param_resp.ints = NULL;
 
     spin_timeout_ = 0;
+    isSpinTimeout = false;
   }
 
   Hardware* getHardware()
@@ -146,10 +150,16 @@ public:
     topic_ = 0;
   };
 
+  void setSpinTimeout(const uint32_t& timeout) {
+     spin_timeout_ = timeout;
+  }
+
 protected:
   bool configured_;
-
+  bool isSpinTimeout;
+  uint32_t last_sync_time;
   uint32_t last_sync_receive_time;
+  uint32_t last_msg_timeout_time;
 
   uint16_t topic_;
 
@@ -164,41 +174,66 @@ public:
   {
 	// Custom spinOnce
 
-	  static uint16_t msg_len;
-	
-	while(true) {
-		uint32_t c_time = hardware_.time();
-		
-		hardware_.read_stm32hw((uint8_t*) &msg_len, 2);
+	uint32_t c_time = hardware_.time();
+	if (isSpinTimeout && configured_) {
+	  requestSyncTime();
+	  last_sync_time = c_time;
+	  last_sync_receive_time = c_time;
+	  isSpinTimeout = false;
+	}
+	static uint16_t msg_len;
 
-		if (msg_len > INPUT_SIZE || msg_len <= 0) {
-			return SPIN_ERR;
-		}
-		
-		hardware_.read_stm32hw((uint8_t*) message_in, msg_len);
+	if ((c_time - last_sync_receive_time) > (SYNC_SECONDS * 2200)) {
+	  configured_ = false;
+	}
 
-		topic_ = (uint16_t) (message_in[1] << 8) + (uint16_t) message_in[0];
+	hardware_.read_stm32hw((uint8_t*) &msg_len, 2);
 
-		if (topic_ == TopicInfo::ID_TIME) {
-			syncTime(message_in);
+	if (msg_len > INPUT_SIZE) {
+		return SPIN_ERR;
+	}
+
+	hardware_.read_stm32hw((uint8_t*) message_in, msg_len);
+
+	if (hardware_.time() - c_time > (SYNC_SECONDS * 1000 * 1000)) {
+	  /* We have been stuck in spinOnce too long, return error */
+	  isSpinTimeout = true;
+	  return SPIN_TIMEOUT;
+	}
+
+	if (spin_timeout_ > 0) {
+		// If the maximum processing timeout has been exceeded, exit with error.
+		// The next spinOnce can continue where it left off, or optionally
+		// based on the application in use, the hardware buffer could be flushed
+		// and start fresh.
+		if ((hardware_.time() - c_time) > spin_timeout_) {
+		  // Exit the spin, processing timeout exceeded.
+			isSpinTimeout = true;
+		  return SPIN_TIMEOUT;
 		}
-		else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
-			req_param_resp.deserialize(message_in);
-			param_recieved = true;
-		}
-		else if (topic_ == 0) {
-			requestSyncTime();
-			negotiateTopics();
-			last_sync_receive_time = c_time;
-			return SPIN_ERR;
-		}
-		else if (topic_ == TopicInfo::ID_TX_STOP) {
-		    configured_ = false;
-		}
-		else {
-			if (subscribers[topic_ - 100]) {
-				subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
-			}
+	}
+
+	topic_ = (uint16_t) (message_in[1] << 8) + (uint16_t) message_in[0];
+
+	if (topic_ == TopicInfo::ID_TIME) {
+		syncTime(message_in);
+	}
+	else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
+		req_param_resp.deserialize(message_in);
+		param_recieved = true;
+	}
+	else if (topic_ == 0) {
+		requestSyncTime();
+		negotiateTopics();
+		last_sync_receive_time = c_time;
+		return SPIN_ERR;
+	}
+	else if (topic_ == TopicInfo::ID_TX_STOP) {
+		configured_ = false;
+	}
+	else {
+		if (subscribers[topic_ - 100]) {
+			subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
 		}
 	}
 
