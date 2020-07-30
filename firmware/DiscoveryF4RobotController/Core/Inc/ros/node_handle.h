@@ -136,16 +136,21 @@ public:
   void initNode()
   {
     hardware_.init();
+    topic_ = 0;
   };
 
   /* Start a named port, which may be network server IP, initialize buffers */
   void initNode(char *portName)
   {
     hardware_.init(portName);
+    topic_ = 0;
   };
 
 protected:
   bool configured_;
+
+  uint32_t last_sync_receive_time;
+
   uint16_t topic_;
 
 public:
@@ -162,6 +167,7 @@ public:
 	  static uint16_t msg_len;
 	
 	while(true) {
+		uint32_t c_time = hardware_.time();
 		
 		hardware_.read_stm32hw((uint8_t*) &msg_len, 2);
 
@@ -171,14 +177,15 @@ public:
 		
 		hardware_.read_stm32hw((uint8_t*) message_in, msg_len);
 
-		topic_ = message_in[1] * 256 + message_in[0];
+		topic_ = (uint16_t) (message_in[1] << 8) + (uint16_t) message_in[0];
 
-		if (topic_== TopicInfo::ID_TIME) {
-			// Вставить синхронизацию времени
-
+		if (topic_ == TopicInfo::ID_TIME) {
+			syncTime(message_in);
 		}
-		if (topic_ == 0) {
+		else if (topic_ == 0) {
+			requestSyncTime();
 			negotiateTopics();
+			last_sync_receive_time = c_time;
 		} else {
 			subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
 		}
@@ -194,6 +201,26 @@ public:
   /********************************************************************
    * Time functions
    */
+
+  void requestSyncTime()
+  {
+    std_msgs::Time t;
+    publish(TopicInfo::ID_TIME, &t);
+    rt_time = hardware_.time();
+  }
+
+  void syncTime(uint8_t * data)
+  {
+    std_msgs::Time t;
+    uint32_t offset = hardware_.time() - rt_time;
+
+    t.deserialize(data);
+    t.data.sec += offset / 1000;
+    t.data.nsec += (offset % 1000) * 1000000UL;
+
+    this->setNow(t.data);
+    last_sync_receive_time = hardware_.time();
+  }
 
   Time now()
   {
