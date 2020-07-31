@@ -46,12 +46,10 @@ class Subscriber_
 public:
   virtual void callback(unsigned char *data) = 0;
   virtual int getEndpointType() = 0;
-
+  virtual const char * getMsgType() = 0;
   // id_ is set by NodeHandle when we advertise
   int id_;
 
-  virtual const char * getMsgType() = 0;
-  virtual const char * getMsgMD5() = 0;
   const char * topic_;
 };
 
@@ -81,10 +79,7 @@ public:
   {
     return this->msg.getType();
   }
-  virtual const char * getMsgMD5()
-  {
-    return this->msg.getMD5();
-  }
+
   virtual int getEndpointType()
   {
     return endpoint_;
@@ -121,10 +116,7 @@ public:
   {
     return this->msg.getType();
   }
-  virtual const char * getMsgMD5()
-  {
-    return this->msg.getMD5();
-  }
+
   virtual int getEndpointType()
   {
     return endpoint_;

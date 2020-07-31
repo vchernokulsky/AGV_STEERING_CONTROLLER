@@ -56,11 +56,7 @@ namespace rosserial_msgs
       offset += 4;
       memcpy(outbuffer + offset, this->message_type, length_message_type);
       offset += length_message_type;
-      uint32_t length_md5sum = strlen(this->md5sum);
-      varToArr(outbuffer + offset, length_md5sum);
-      offset += 4;
-      memcpy(outbuffer + offset, this->md5sum, length_md5sum);
-      offset += length_md5sum;
+
       union {
         int32_t real;
         uint32_t base;
@@ -98,15 +94,7 @@ namespace rosserial_msgs
       inbuffer[offset+length_message_type-1]=0;
       this->message_type = (char *)(inbuffer + offset-1);
       offset += length_message_type;
-      uint32_t length_md5sum;
-      arrToVar(length_md5sum, (inbuffer + offset));
-      offset += 4;
-      for(unsigned int k= offset; k< offset+length_md5sum; ++k){
-          inbuffer[k-1]=inbuffer[k];
-      }
-      inbuffer[offset+length_md5sum-1]=0;
-      this->md5sum = (char *)(inbuffer + offset-1);
-      offset += length_md5sum;
+
       union {
         int32_t real;
         uint32_t base;
@@ -122,8 +110,6 @@ namespace rosserial_msgs
     }
 
     const char * getType(){ return "rosserial_msgs/TopicInfo"; };
-    const char * getMD5(){ return "0ad51f88fc44892f8c10684077646005"; };
-
   };
 
 }
