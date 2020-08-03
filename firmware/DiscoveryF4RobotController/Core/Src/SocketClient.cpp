@@ -151,7 +151,7 @@ uint8_t SocketClient::check_errno()
 }
 
 void SocketClient::socket_receive_all(uint8_t *pData, uint16_t size) {
-	uint8_t msg_recv_data_counter = 0;
+	uint16_t msg_recv_data_counter = 0;
 	uint32_t rdmaInd = 0;
 
 	while(msg_recv_data_counter < size) {
