@@ -53,6 +53,7 @@ class SocketData extends ChangeNotifier {
 
   static bool getData = false;
 
+  static bool dhcpConfig = false;
   static String localIpAddress = "";
   static String networkMask = "";
   static String gateAway = "";
@@ -181,7 +182,7 @@ class SocketData extends ChangeNotifier {
 //    if(chkSum != 255){
 //      return;
 //    }
-
+    dhcpConfig = data[dhcpConfigOffset] > 0 ? true: false;
     localIpAddress = IpInput.bytesToString(
         data.sublist(localIpOffset, localIpOffset + ipSize));
     networkMask = IpInput.bytesToString(

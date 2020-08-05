@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stm_setup/Inputs/IpInput.dart';
 import 'package:stm_setup/SocketData.dart';
+import 'package:stm_setup/CustomSwitch.dart';
 
 import 'Inputs/NumericInput.dart';
 import 'ShowToast.dart';
@@ -18,8 +19,10 @@ class _Wiznet extends State<Wiznet> {
   IpInput gateAwayInput;
   NumericInput localRosPort;
   NumericInput setUpServerPort;
+  CustomSwitch dhcpSwitch;
 
   _Wiznet() {
+    dhcpSwitch = CustomSwitch(title: 'DHCP', isSwitched: false);
     ipInput = IpInput(title: "Robot IP");
     networkMaskInput = IpInput(title: "network mask");
     gateAwayInput = IpInput(title: "gate away");
@@ -60,6 +63,8 @@ class _Wiznet extends State<Wiznet> {
       showBadToast("Can not save: Wrong setup server port");
       return;
     }
+
+    SocketData.dhcpConfig = dhcpSwitch.isSwitched;
     SocketData.localIpAddress = ipInput.controller.text;
     SocketData.networkMask = networkMaskInput.controller.text;
     SocketData.gateAway = gateAwayInput.controller.text;
@@ -70,6 +75,7 @@ class _Wiznet extends State<Wiznet> {
 
   @override
   Widget build(BuildContext context) {
+    dhcpSwitch.isSwitched = SocketData.dhcpConfig;
     ipInput.controller.text = SocketData.localIpAddress;
     networkMaskInput.controller.text = SocketData.networkMask;
     gateAwayInput.controller.text = SocketData.gateAway;
@@ -77,6 +83,7 @@ class _Wiznet extends State<Wiznet> {
     setUpServerPort.controller.text = SocketData.setupServerPort;
     return Column(
       children: <Widget>[
+        dhcpSwitch,
         ipInput,
         localRosPort,
         setUpServerPort,
