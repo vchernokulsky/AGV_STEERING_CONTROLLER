@@ -9,49 +9,48 @@
 #include <iostream>
 #include <algorithm>
 
-#include "../components/network/include/TcpClient.h"
-#include "../components/network/include/wifi.h"
+#include "TcpClient.h"
+#include "wifi.h"
 #include "esp_spi_flash.h"
 
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "ros.h"
+#include "std_msgs/String.h"
+
+#define ROSSERVER_IP CONFIG_ROSSERVER_IP
+#define ROSSERVER_PORT CONFIG_ROSSERVER_PORT
+
+TcpClient tcpClient;
+ros::NodeHandle nh;
+
+static void RosTask(void *arg) {
+    static std_msgs::String str_msg;
+    static ros::Publisher pub("publisher", &str_msg);
+
+    nh.advertise(pub);
+    static char msg[] = "Aloha!";
+
+    while(1) {
+        str_msg.data = msg;
+        pub.publish(&str_msg);
+        nh.spinOnce();
+        vTaskDelay(100);
+    }
+}
+
 static void tcpClientTask(void *arg) {
-    TcpClient *tcpClient = (TcpClient *) arg;
-    tcpClient->tcpClientLoop();
+    tcpClient.tcpClientLoop();
 }
 
-static void tcpSendTask(void *arg) {
-    TcpClient *tcpClient = (TcpClient *) arg;
-    static char s[] = "Aloha!";
-    while(1) {
-        tcpClient->sock_send(s, strlen(s));
-        vTaskDelay(100);
-    }
-}
-
-static void tcpRecvTask(void *arg) {
-    TcpClient *tcpClient = (TcpClient *) arg;
-    static char s[1024];
-    static uint32_t remain;
-    while(1) {
-        tcpClient->sock_recv(&s[0], 1024, &remain);
-        std::cout << "Recv | " << s << std::endl;
-        std::fill(s, s + 1024, '\0');
-        vTaskDelay(100);
-    }
-}
-
-extern "C" void app_main()
-{
-    TcpClient tcpClient;
+extern "C" void app_main() {
+    tcpClient.init(ROSSERVER_IP, ROSSERVER_PORT);
+    nh.initNode(&tcpClient);
 
     esp_ros_wifi_init();
 
-    tcpClient.init(3331, "192.168.35.135", 3000);
-
-    xTaskCreatePinnedToCore(tcpClientTask, "TcpClientTask", 1024, (void*) &tcpClient, 1, NULL, 0);
-    xTaskCreatePinnedToCore(tcpSendTask, "TcpSendTask", 1024, (void*) &tcpClient, 1, NULL, 0);
-    xTaskCreatePinnedToCore(tcpRecvTask, "TcpRecvTask", 1024, (void*) &tcpClient, 1, NULL, 0);
+    xTaskCreatePinnedToCore(RosTask, "RosTask", 2048, NULL, 1, NULL, 0);
+    xTaskCreatePinnedToCore(tcpClientTask, "TcpClientTask", 1024, NULL, 1, NULL, 0);
 }

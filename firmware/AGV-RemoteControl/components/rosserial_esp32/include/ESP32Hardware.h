@@ -7,20 +7,15 @@ extern "C" {
 #include "esp_err.h"
 #include "esp_timer.h"
 #include <driver/uart.h>
-#include "esp_ros_wifi.h"
 }
 
-#define ROS_SERVER_IP       CONFIG_ROSSERVER_IP
-#define ROS_SERVER_PORT     CONFIG_ROSSERVER_PORT
-
-#define UART_PORT           UART_NUM_0
-#define UART_TX_PIN         GPIO_NUM_1
-#define UART_RX_PIN         GPIO_NUM_3
+#include "TcpClient.h"
 
 class ESP32Hardware
 {
     protected:
         uint8_t rx_buf[1024];
+        TcpClient *tcpClient;
 
     public:
         ESP32Hardware()
@@ -28,28 +23,21 @@ class ESP32Hardware
         }
 
         // Initialization code for ESP32
-        void init()
+        void init(TcpClient *tcpClient)
         {
-            esp_ros_wifi_init();
-            ros_tcp_connect(ROS_SERVER_IP, ROS_SERVER_PORT);
+            this->tcpClient = tcpClient;
         }
 
         // read a byte from the serial port. -1 = failure
-        int read()
+        void read(uint8_t *buf, uint16_t size)
         {
-            int read_len;
-            read_len = ros_tcp_read(rx_buf, 1);
-            if (read_len == 1) {
-                return rx_buf[0];
-            } else {
-                return -1;
-            }
+            tcpClient->sock_recv_all(buf, size);
         }
 
         // write data to the connection to ROS
-        void write(uint8_t* data, int length)
+        void write(uint8_t* data, uint16_t length)
         {
-            ros_tcp_send(data, length);
+            tcpClient->sock_send(data, length);
         }
 
         // returns milliseconds since start of program

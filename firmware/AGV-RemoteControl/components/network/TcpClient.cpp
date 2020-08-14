@@ -11,20 +11,20 @@ bool TcpClient::is_connected = false;
 TcpClient::TcpClient( ) {
 }
 
-void TcpClient::init(uint16_t ros_local_port, const char *remote_ip, uint16_t ros_serialnode_port)
+void TcpClient::init(const char *remote_ip, uint16_t port)
 {
     TcpClient::error_semaphore = xSemaphoreCreateMutex();
 
     memset(&remotehost, 0, sizeof(struct sockaddr_in));
     remotehost.sin_addr.s_addr = inet_addr(remote_ip);
     remotehost.sin_family = AF_INET;
-    remotehost.sin_port = htons(ros_serialnode_port);
+    remotehost.sin_port = htons(port);
 }
 
 TcpClient::~TcpClient() {
 }
 
-void TcpClient::sock_recv(char *pData, uint16_t size, uint32_t* rdmaInd)
+void TcpClient::sock_recv(uint8_t *pData, uint16_t size, uint32_t* rdmaInd)
 {
     if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
         recv_data = (TcpClient::is_connected) ? recv(sock, pData, size, 0) : 0;
@@ -41,7 +41,7 @@ void TcpClient::sock_recv(char *pData, uint16_t size, uint32_t* rdmaInd)
     }
 }
 
-void TcpClient::sock_send(char *pData, uint16_t len)
+void TcpClient::sock_send(uint8_t *pData, uint16_t len)
 {
     if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
         send_data = (TcpClient::is_connected) ? send(sock, pData, len, 0): 0;
@@ -128,7 +128,7 @@ uint8_t TcpClient::check_errno()
     return UNKNOWN_STATUS;
 }
 
-void TcpClient::sock_recv_all(char *pData, uint16_t size) {
+void TcpClient::sock_recv_all(uint8_t *pData, uint16_t size) {
     uint16_t msg_recv_data_counter = 0;
     uint32_t rdmaInd = 0;
 
