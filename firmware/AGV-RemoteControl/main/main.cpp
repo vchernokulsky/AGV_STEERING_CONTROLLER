@@ -9,8 +9,8 @@
 #include <iostream>
 #include <algorithm>
 
-#include "TcpClient.h"
-#include "wifi.h"
+#include "../components/network/include/TcpClient.h"
+#include "../components/network/include/wifi.h"
 #include "esp_spi_flash.h"
 
 #include <string.h>
