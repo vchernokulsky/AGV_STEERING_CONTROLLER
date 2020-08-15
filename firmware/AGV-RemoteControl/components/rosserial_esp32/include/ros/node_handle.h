@@ -147,7 +147,7 @@ namespace ros {
         virtual int spinOnce() {
 // Custom spinOnce
             static uint16_t msg_len;
-            hardware_.read((uint8_t*) & msg_len, 2);
+            hardware_.read((uint8_t*) &msg_len, 2);
 
             if (msg_len > INPUT_SIZE || msg_len == 0) {
                 return SPIN_ERR;

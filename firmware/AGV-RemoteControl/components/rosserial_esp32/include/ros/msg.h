@@ -48,7 +48,6 @@ public:
   virtual int serialize(unsigned char *outbuffer) const = 0;
   virtual int deserialize(unsigned char *data) = 0;
   virtual const char * getType() = 0;
-  virtual const char * getMD5() = 0;
 
   /**
    * @brief This tricky function handles promoting a 32bit float to a 64bit

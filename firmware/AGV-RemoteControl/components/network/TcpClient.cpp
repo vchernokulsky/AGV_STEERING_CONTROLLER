@@ -26,81 +26,81 @@ TcpClient::~TcpClient() {
 
 void TcpClient::sock_recv(uint8_t *pData, uint16_t size, uint32_t* rdmaInd)
 {
-    if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
+//    if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
         recv_data = (TcpClient::is_connected) ? recv(sock, pData, size, 0) : 0;
-        xSemaphoreGive( TcpClient::error_semaphore );
-    }
+//        xSemaphoreGive( TcpClient::error_semaphore );
+//    }
     *rdmaInd = (recv_data > 0) ? recv_data : 0;
 
-    if( check_errno(recv_data) == ERROR_STATUS){
-        ++err_count;
-    } else {
-        if (err_count > 0){
-            --err_count;
-        }
-    }
+//    if( check_errno(recv_data) == ERROR_STATUS){
+//        ++err_count;
+//    } else {
+//        if (err_count > 0){
+//            --err_count;
+//        }
+//    }
 }
 
 void TcpClient::sock_send(uint8_t *pData, uint16_t len)
 {
-    if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
+//    if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
         send_data = (TcpClient::is_connected) ? send(sock, pData, len, 0): 0;
-        std::cout << "Sent | " << TcpClient::is_connected << std::endl;
+//        std::cout << "Sent | " << TcpClient::is_connected << std::endl;
+//
+//        xSemaphoreGive( TcpClient::error_semaphore );
+//    }
 
-        xSemaphoreGive( TcpClient::error_semaphore );
-    }
-
-    if( check_errno(send_data) == ERROR_STATUS){
-        ++err_count;
-    } else {
-        if (err_count > 0){
-            --err_count;
-        }
-    }
+//    if( check_errno(send_data) == ERROR_STATUS){
+//        ++err_count;
+//    } else {
+//        if (err_count > 0){
+//            --err_count;
+//        }
+//    }
 }
 
 void TcpClient::tcpClientLoop()
 {
     for(;;) {
-        if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
+//        if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
             sock = socket(AF_INET, SOCK_STREAM, 0);
-            xSemaphoreGive( TcpClient::error_semaphore);
-        }
+//            xSemaphoreGive( TcpClient::error_semaphore);
+//        }
 
         if (sock >= 0) {
             err_count = 0;
             std::cout << "Trying to connect" << std::endl;
 
-            if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
+//            if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
                 fcntl(sock, F_SETFL, (fcntl(sock, F_GETFL, 0)| O_NONBLOCK));
 
                 connect(sock, (struct sockaddr *)&remotehost, sizeof(remotehost));
-                xSemaphoreGive( TcpClient::error_semaphore );
-            }
+//                xSemaphoreGive( TcpClient::error_semaphore );
+//            }
 
-            std::cout << "Connected" << std::endl;
-            if (check_errno() == OK_STATUS) {
-                std::cout << "check errno completed" << std::endl;
-                if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
+//            std::cout << "Connected" << std::endl;
+//            if (check_errno() == OK_STATUS) {
+//                std::cout << "check errno completed" << std::endl;
+//                if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
                     TcpClient::is_connected = true;
-                    xSemaphoreGive( TcpClient::error_semaphore);
-                }
+//                    xSemaphoreGive( TcpClient::error_semaphore);
+//                }
                 for(;;) {
-                    if(err_count > MAX_ERROR_COUNT){
-                        if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
-                            TcpClient::is_connected = false;
-                            xSemaphoreGive( TcpClient::error_semaphore );
-                        }
-                        break;
-                    }
+//                    if(err_count > MAX_ERROR_COUNT){
+//                        if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
+//                            TcpClient::is_connected = false;
+//                            xSemaphoreGive( TcpClient::error_semaphore );
+//                        }
+//                        break;
+//                    }
                     vTaskDelay(100);
                 }
-            }
-            if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
-                close(sock);
-                std::cout << "Disconnected" << std::endl;
-                xSemaphoreGive( TcpClient::error_semaphore );
-            }
+//            }
+//            if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
+//                close(sock);
+//                std::cout << "Disconnected" << std::endl;
+//                xSemaphoreGive( TcpClient::error_semaphore );
+//            }
         }
         vTaskDelay(100);
     }
