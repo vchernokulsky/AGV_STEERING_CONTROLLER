@@ -37,7 +37,7 @@ static void RosTask(void *arg) {
         str_msg.data = msg;
         pub.publish(&str_msg);
         nh.spinOnce();
-        vTaskDelay(100);
+        vTaskDelay(1);
     }
 }
 
