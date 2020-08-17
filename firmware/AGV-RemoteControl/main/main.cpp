@@ -6,6 +6,7 @@
    software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
    CONDITIONS OF ANY KIND, either express or implied.
 */
+
 #include <iostream>
 #include <algorithm>
 
@@ -16,7 +17,10 @@
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-
+#include "driver/i2s.h"
+#include "driver/adc.h"
+#include "driver/ledc.h"
+#include "dig_i2s_adc.h"
 #include "ros.h"
 #include "std_msgs/String.h"
 

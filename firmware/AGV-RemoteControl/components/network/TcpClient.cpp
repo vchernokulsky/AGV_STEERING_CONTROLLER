@@ -97,7 +97,7 @@ void TcpClient::tcpClientLoop()
                         }
                         break;
                     }
-                    vTaskDelay(100);
+                    vTaskDelay(1);
                 }
             }
             if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
@@ -106,7 +106,7 @@ void TcpClient::tcpClientLoop()
                 xSemaphoreGive( TcpClient::error_semaphore );
             }
         }
-        vTaskDelay(100);
+        vTaskDelay(1);
     }
 }
 uint8_t TcpClient::check_errno(int bytes){
