@@ -243,3 +243,26 @@ esp_err_t i2s_wait_adc_done(i2s_port_t i2s_num, TickType_t ticks_to_wait)
     }
     return ret;
 }
+
+esp_err_t i2s_adc_setup(adc_unit_t adc_unit, adc_channel_t *channels, uint8_t channel_num, i2s_port_t i2s_num, uint8_t clkm) {
+    if (i2s_adc_init(I2S_NUM_0) != ESP_OK) {
+        return ESP_FAIL;
+    }
+    if (adc_i2s_scale_mode_init(adc_unit, channels, channel_num) != ESP_OK) {
+        return ESP_FAIL;
+    }
+    if (i2s_adc_set_clk(i2s_num, clkm) != ESP_OK) {
+        return ESP_FAIL;
+    }
+    if (i2s_adc_driver_install(i2s_num, NULL, NULL) != ESP_OK){
+        return ESP_FAIL;
+    }
+    return ESP_OK;
+}
+
+esp_err_t get_adc(i2s_port_t i2s_num, void *buf, size_t len) {
+    if (i2s_adc_start(i2s_num, buf, len) != ESP_OK) {
+        return ESP_FAIL;
+    }
+    return i2s_wait_adc_done(i2s_num, portMAX_DELAY);
+}
