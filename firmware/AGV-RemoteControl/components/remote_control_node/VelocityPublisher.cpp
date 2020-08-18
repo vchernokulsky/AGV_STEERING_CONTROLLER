@@ -9,20 +9,13 @@ VelocityPublisher::VelocityPublisher(): publisher("/cmd_vel", &twist) {
 }
 
 esp_err_t VelocityPublisher::init(ros::NodeHandle *nodeHandle) {
-    if (vehicleController.init() != ESP_OK) {
+    if (velocityController.init() != ESP_OK) {
         return ESP_FAIL;
     }
     nodeHandle->advertise(publisher);
     return ESP_OK;
 }
 void VelocityPublisher::publish() {
-    twist.linear.x = 1;
-    twist.linear.y = 2;
-    twist.linear.z = 3;
-
-    twist.angular.x = 4;
-    twist.angular.y = 5;
-    twist.angular.z = 6;
-
+    velocityController.getSpeed(&twist.linear.x, &twist.angular.z);
     publisher.publish(&twist);
 }

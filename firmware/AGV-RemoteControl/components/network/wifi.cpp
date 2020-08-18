@@ -19,8 +19,6 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
             esp_wifi_connect();
             break;
         case SYSTEM_EVENT_STA_GOT_IP:
-            ESP_LOGI(TAG, "got ip:%s",
-                     ip4addr_ntoa(&event->event_info.got_ip.ip_info.ip));
             s_retry_num = 0;
             xEventGroupSetBits(wifi_event_group, IPV4_GOTIP_BIT);
             break;
@@ -30,9 +28,7 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
                 esp_wifi_connect();
                 xEventGroupClearBits(wifi_event_group, IPV4_GOTIP_BIT);
                 s_retry_num++;
-                ESP_LOGI(TAG,"Retrying connection to AP");
             }
-            ESP_LOGE(TAG,"Failed to connect to AP");
             break;
         }
         default:
@@ -61,7 +57,5 @@ void esp_ros_wifi_init()
     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start());
 
-    ESP_LOGI(TAG, "Waiting for AP connection...");
     xEventGroupWaitBits(wifi_event_group, IPV4_GOTIP_BIT, false, true, portMAX_DELAY);
-    ESP_LOGI(TAG, "Connected to AP");
 }

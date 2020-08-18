@@ -27,8 +27,6 @@ void TcpClient::sock_recv(uint8_t *pData, uint16_t size, uint32_t* rdmaInd)
         recv_data = (TcpClient::is_connected) ? recv(sock, pData, size, 0) : 0;
         vTaskDelay(1500 / portTICK_PERIOD_MS); // задержка, конвертируемая из мс в тики
 
-        std::cout << "Recv | " << recv_data << std::endl;
-
         xSemaphoreGive( TcpClient::error_semaphore );
     }
     *rdmaInd = (recv_data > 0) ? recv_data : 0;
@@ -46,8 +44,6 @@ void TcpClient::sock_send(uint8_t *pData, uint16_t len)
 {
     if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
         send_data = (TcpClient::is_connected) ? send(sock, pData, len, 0): 0;
-        std::cout << "Sent | " << send_data << std::endl;
-
         xSemaphoreGive( TcpClient::error_semaphore );
     }
 
@@ -70,8 +66,6 @@ void TcpClient::doTcpClientTask()
 
         if (sock >= 0) {
             err_count = 0;
-            std::cout << "Trying to connect" << std::endl;
-
             if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
                 fcntl(sock, F_SETFL, (fcntl(sock, F_GETFL, 0)| O_NONBLOCK));
 
@@ -79,9 +73,7 @@ void TcpClient::doTcpClientTask()
                 xSemaphoreGive( TcpClient::error_semaphore );
             }
 
-            std::cout << "Connected" << std::endl;
             if (check_errno() == OK_STATUS) {
-                std::cout << "check errno completed" << std::endl;
                 if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
                     TcpClient::is_connected = true;
                     xSemaphoreGive( TcpClient::error_semaphore);
@@ -99,7 +91,6 @@ void TcpClient::doTcpClientTask()
             }
             if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
                 close(sock);
-                std::cout << "Disconnected" << std::endl;
                 xSemaphoreGive( TcpClient::error_semaphore );
             }
         }

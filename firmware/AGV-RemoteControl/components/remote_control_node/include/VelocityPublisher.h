@@ -5,12 +5,12 @@
 #ifndef AGV_REMOTECONTROL_VELOCITYPUBLISHER_H
 #define AGV_REMOTECONTROL_VELOCITYPUBLISHER_H
 
-#include "VehicleController.h"
+#include "VelocityController.h"
 #include <geometry_msgs/Twist.h>
 #include "ros.h"
 
 class VelocityPublisher {
-    VehicleController vehicleController;
+    VelocityController velocityController;
     ros::Publisher publisher;
     geometry_msgs::Twist twist;
 
