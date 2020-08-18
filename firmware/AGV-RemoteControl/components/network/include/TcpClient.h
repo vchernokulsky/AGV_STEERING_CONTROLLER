@@ -9,9 +9,8 @@
 #include "lwip/sockets.h"
 #include "lwip/sys.h"
 #include <lwip/netdb.h>
-#include <cstring>
-
 #include "freertos/semphr.h"
+#include <cstring>
 
 #define OK_STATUS 0
 #define WARNING_STATUS 1

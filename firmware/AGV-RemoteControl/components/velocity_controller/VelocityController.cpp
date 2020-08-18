@@ -1,8 +1,6 @@
 //
 // Created by data-scientist on 15.08.2020.
 //
-#include <iostream>
-#include <cstring>
 #include "include/VelocityController.h"
 
 esp_err_t VelocityController::init() {

@@ -7,7 +7,6 @@
 
 #include "VelocityPublisher.h"
 #include "ros.h"
-#include "std_msgs/String.h"
 
 class RemoteController {
     ros::NodeHandle nodeHandle;
