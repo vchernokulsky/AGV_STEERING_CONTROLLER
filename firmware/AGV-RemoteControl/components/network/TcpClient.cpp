@@ -21,9 +21,6 @@ void TcpClient::init(const char *remote_ip, uint16_t port)
     remotehost.sin_port = htons(port);
 }
 
-TcpClient::~TcpClient() {
-}
-
 void TcpClient::sock_recv(uint8_t *pData, uint16_t size, uint32_t* rdmaInd)
 {
     if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
@@ -63,7 +60,7 @@ void TcpClient::sock_send(uint8_t *pData, uint16_t len)
     }
 }
 
-void TcpClient::tcpClientLoop()
+void TcpClient::doTcpClientTask()
 {
     for(;;) {
         if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {

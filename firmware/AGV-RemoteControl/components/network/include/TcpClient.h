@@ -38,13 +38,12 @@ public:
     static bool is_connected;
 
     TcpClient();
-    virtual ~TcpClient();
 
     void init(const char *remote_ip, uint16_t port);
     void sock_recv(uint8_t *pData, uint16_t size, uint32_t* rdmaInd);
     void sock_recv_all(uint8_t *pData, uint16_t size);
     void sock_send(uint8_t *pData, uint16_t len);
-    void tcpClientLoop();
+    void doTcpClientTask();
 };
 
 
