@@ -120,7 +120,7 @@ esp_err_t adc_i2s_scale_mode_init(adc_unit_t adc_unit, adc_channel_t *channel, u
 
 // Дополнение к AGV-RemoteControl
 esp_err_t i2s_adc_setup(adc_unit_t adc_unit, adc_channel_t *channels, uint8_t channel_num, i2s_port_t i2s_num, uint8_t clkm);
-esp_err_t get_adc(i2s_port_t i2s_num, void *buf, size_t len);
+esp_err_t get_adc(i2s_port_t i2s_num, void *buf, uint16_t len);
 #ifdef __cplusplus
 }
 #endif

@@ -8,8 +8,8 @@
 */
 
 #include <iostream>
-#include <algorithm>
 
+#include "VehicleController.h"
 #include "TcpClient.h"
 #include "wifi.h"
 #include "esp_spi_flash.h"
@@ -17,44 +17,57 @@
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "driver/i2s.h"
-#include "driver/adc.h"
-#include "driver/ledc.h"
-#include "dig_i2s_adc.h"
 #include "ros.h"
 #include "std_msgs/String.h"
 
 #define ROSSERVER_IP CONFIG_ROSSERVER_IP
 #define ROSSERVER_PORT CONFIG_ROSSERVER_PORT
 
-TcpClient tcpClient;
-ros::NodeHandle nh;
-
-static void RosTask(void *arg) {
-    static std_msgs::String str_msg;
-    static ros::Publisher pub("publisher", &str_msg);
-
-    nh.advertise(pub);
-    static char msg[] = "Aloha!";
-
-    while(1) {
-        str_msg.data = msg;
-        pub.publish(&str_msg);
-        nh.spinOnce();
-        vTaskDelay(1);
+//TcpClient tcpClient;
+//ros::NodeHandle nh;
+VehicleController vehicleController;
+//
+//static void rosTask(void *arg) {
+//    static std_msgs::String str_msg;
+//    static ros::Publisher pub("publisher", &str_msg);
+//
+//    nh.advertise(pub);
+//    static char msg[] = "Aloha!";
+//
+//    while(1) {
+//        str_msg.data = msg;
+//        pub.publish(&str_msg);
+//        nh.spinOnce();
+//        vTaskDelay(1);
+//    }
+//}
+//
+//static void tcpClientTask(void *arg) {
+//    tcpClient.tcpClientLoop();
+//}
+//
+static void vehicleControlTask(void *arg) {
+    static int leftWheelSpeed, rightWheelSpeed;
+    while (1) {
+        if (vehicleController.getSpeed(&leftWheelSpeed, &rightWheelSpeed) != ESP_OK) {
+            std::cout << "ESP_FAIL" << std::endl;
+        } else {
+            std::cout << leftWheelSpeed << " " << rightWheelSpeed << std::endl;
+        }
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
 
-static void tcpClientTask(void *arg) {
-    tcpClient.tcpClientLoop();
-}
-
 extern "C" void app_main() {
-    tcpClient.init(ROSSERVER_IP, ROSSERVER_PORT);
-    nh.initNode(&tcpClient);
-
-    esp_ros_wifi_init();
-
-    xTaskCreatePinnedToCore(RosTask, "RosTask", 2048, NULL, 1, NULL, 0);
-    xTaskCreatePinnedToCore(tcpClientTask, "TcpClientTask", 1024, NULL, 1, NULL, 0);
+//    esp_ros_wifi_init();
+//
+//    tcpClient.init(ROSSERVER_IP, ROSSERVER_PORT);
+//    nh.initNode(&tcpClient);
+//
+    if (vehicleController.init() != ESP_OK) {
+        std::cout << "ESP_FAIL" << std::endl;
+    }
+//    xTaskCreatePinnedToCore(rosTask, "rosTask", 2048, NULL, 1, NULL, 0);
+//    xTaskCreatePinnedToCore(tcpClientTask, "tcpClientTask", 1024, NULL, 1, NULL, 0);
+    xTaskCreatePinnedToCore(vehicleControlTask, "vehicleControlTask", 4 * 1024, NULL, 1, NULL, 0);
 }
