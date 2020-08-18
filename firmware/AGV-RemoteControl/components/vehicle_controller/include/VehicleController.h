@@ -20,13 +20,13 @@
 #define I2S_NUM I2S_NUM_0
 #define I2S_ADC_UNIT ADC_UNIT_1
 #define CLKM 50
-#define LEFT_WHEEL_ADC_CHANNEL ADC_CHANNEL_0
-#define RIGHT_WHEEL_ADC_CHANNEL ADC_CHANNEL_3
+#define LEFT_WHEEL_ADC_CHANNEL ADC1_CHANNEL_0
+#define RIGHT_WHEEL_ADC_CHANNEL ADC1_CHANNEL_3
 
 #define SPEED_MAX 255 // максимальное абсолютное значение скорости
 
 class VehicleController {
-    uint16_t adcMeasurements[2]; // 0 - X, 1 - Y (angle, speed)
+//    uint16_t adcMeasurements[2];
 
 public:
     esp_err_t init();
