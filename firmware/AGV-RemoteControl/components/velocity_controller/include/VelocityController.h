@@ -23,8 +23,7 @@
 #define LINEAR_ADC_CHANNEL ADC1_CHANNEL_0
 #define ANGULAR_ADC_CHANNEL ADC1_CHANNEL_3
 
-#define LINEAR_SPEED_MAX 255 // максимальное абсолютное значение линейной скорости
-#define ANGULAR_SPEED_MAX 255 // максимальное абсолютное значение угловой скорости
+#define LINEAR_SPEED_MAX 100 // максимальное абсолютное значение линейной скорости
 
 #define GET_ADC(channel) adc1_get_raw((adc1_channel_t)channel)
 
