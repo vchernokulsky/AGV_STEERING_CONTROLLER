@@ -24,9 +24,9 @@
 #define ANGULAR_ADC_CHANNEL ADC1_CHANNEL_3
 
 #define LINEAR_SPEED_MAX 100 // максимальное абсолютное значение линейной скорости
+#define ANGULAR_SPEED_MAX M_PI_2
 
 #define GET_ADC(channel) adc1_get_raw((adc1_channel_t)channel)
-
 class VelocityController {
 public:
     esp_err_t init();

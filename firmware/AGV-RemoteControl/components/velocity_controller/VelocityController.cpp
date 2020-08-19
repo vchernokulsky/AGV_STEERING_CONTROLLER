@@ -15,6 +15,6 @@ esp_err_t VelocityController::init() {
 
 esp_err_t VelocityController::getSpeed(double *linearSpeed, double *angularSpeed) {
     *linearSpeed = GET_ADC(LINEAR_ADC_CHANNEL) * LINEAR_SPEED_MAX / 2048 - LINEAR_SPEED_MAX;
-    *angularSpeed = (GET_ADC(ANGULAR_ADC_CHANNEL) * LINEAR_SPEED_MAX/ 2048 - LINEAR_SPEED_MAX) * M_PI / 180;
+    *angularSpeed = (GET_ADC(ANGULAR_ADC_CHANNEL) * ANGULAR_SPEED_MAX / 2048 - ANGULAR_SPEED_MAX);
     return ESP_OK;
 }
