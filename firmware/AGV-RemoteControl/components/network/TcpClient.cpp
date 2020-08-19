@@ -3,7 +3,6 @@
 //
 
 #include "include/TcpClient.h"
-#include <iostream>
 
 SemaphoreHandle_t TcpClient::error_semaphore;
 bool TcpClient::is_connected = false;

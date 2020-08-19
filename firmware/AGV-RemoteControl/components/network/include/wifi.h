@@ -14,7 +14,6 @@
 #include "nvs_flash.h"
 #include "sdkconfig.h"
 
-
 #define MAXIMUM_RETRY  5
 
 #define ROS_SERVER_AP CONFIG_ROSSERVER_AP

@@ -23,13 +23,12 @@
 #define LINEAR_ADC_CHANNEL ADC1_CHANNEL_0
 #define ANGULAR_ADC_CHANNEL ADC1_CHANNEL_3
 
-#define SPEED_MAX 255 // максимальное абсолютное значение скорости
+#define LINEAR_SPEED_MAX 255 // максимальное абсолютное значение линейной скорости
+#define ANGULAR_SPEED_MAX 255 // максимальное абсолютное значение угловой скорости
 
 #define GET_ADC(channel) adc1_get_raw((adc1_channel_t)channel)
 
 class VelocityController {
-//    uint16_t adcMeasurements[2];
-
 public:
     esp_err_t init();
     esp_err_t getSpeed(double * linearSpeed, double *angularSpeed);
