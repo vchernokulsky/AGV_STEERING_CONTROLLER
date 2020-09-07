@@ -46,6 +46,7 @@
 
 #include "ros/msg.h"
 
+
 namespace ros {
 
     class NodeHandleBase_ {
@@ -147,16 +148,18 @@ namespace ros {
         virtual int spinOnce() {
 // Custom spinOnce
             static uint16_t msg_len;
-            hardware_.read((uint8_t*) &msg_len, 2);
+            static uint16_t topic;
 
-            if (msg_len > INPUT_SIZE || msg_len == 0) {
+            hardware_.read((uint8_t*) &msg_len, 2);
+            hardware_.read((uint8_t*) &topic, 2);
+            if (msg_len > INPUT_SIZE || msg_len < 0) {
                 return SPIN_ERR;
             }
 
             hardware_.read((uint8_t*) message_in, msg_len);
 
-            topic_ = (uint16_t)(message_in[1] << 8) + (uint16_t) message_in[0];
-
+//            topic_ = (uint16_t)(message_in[1] << 8) + (uint16_t) message_in[0];
+            topic_ = topic;
             if (topic_ == TopicInfo::ID_TIME) {
                 syncTime(message_in);
             } else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
