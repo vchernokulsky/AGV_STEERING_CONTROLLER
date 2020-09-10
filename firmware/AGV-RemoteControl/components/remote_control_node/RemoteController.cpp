@@ -27,7 +27,6 @@ void RemoteController::doRemoteControlTask() {
 			velocityPublisher.publish();
 			nodeHandle.spinOnce();
 		}
-		t3 = esp_timer_get_time();
         vTaskDelay(5);
     }
 }
