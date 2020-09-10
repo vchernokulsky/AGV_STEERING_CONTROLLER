@@ -29,9 +29,9 @@ class ESP32Hardware
         }
 
         // read a byte from the serial port. -1 = failure
-        void read(uint8_t *buf, uint16_t size)
+        bool read(uint8_t *buf, uint16_t size)
         {
-            tcpClient->sock_recv_all(buf, size);
+           return tcpClient->sock_recv_all(buf, size);
         }
 
         // write data to the connection to ROS

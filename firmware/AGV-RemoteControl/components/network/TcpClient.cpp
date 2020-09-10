@@ -120,15 +120,20 @@ uint8_t TcpClient::check_errno()
     return UNKNOWN_STATUS;
 }
 
-void TcpClient::sock_recv_all(uint8_t *pData, uint16_t size) {
+bool TcpClient::sock_recv_all(uint8_t *pData, uint16_t size) {
     uint16_t msg_recv_data_counter = 0;
     uint32_t rdmaInd = 0;
+    uint16_t recv_try = RECV_WAIT_NUM;
 
     while(msg_recv_data_counter < size) {
         sock_recv(&pData[msg_recv_data_counter], size - msg_recv_data_counter, (uint32_t*) &rdmaInd);
+        if (rdmaInd == 0 && (msg_recv_data_counter==0 || --recv_try == 0)){
+        	break;
+        }
         msg_recv_data_counter += rdmaInd;
         if(msg_recv_data_counter < size){
         	vTaskDelay(10);
         }
     }
+    return msg_recv_data_counter == size;
 }

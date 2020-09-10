@@ -18,6 +18,7 @@
 #define UNKNOWN_STATUS 3
 
 #define MAX_ERROR_COUNT 100
+#define RECV_WAIT_NUM 100
 
 class TcpClient {
     int sock;
@@ -40,7 +41,7 @@ public:
 
     void init(const char *remote_ip, uint16_t port);
     void sock_recv(uint8_t *pData, uint16_t size, uint32_t* rdmaInd);
-    void sock_recv_all(uint8_t *pData, uint16_t size);
+    bool sock_recv_all(uint8_t *pData, uint16_t size);
     void sock_send(uint8_t *pData, uint16_t len);
     void doTcpClientTask();
 };
