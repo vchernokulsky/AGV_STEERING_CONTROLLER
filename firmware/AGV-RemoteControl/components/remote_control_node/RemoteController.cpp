@@ -22,24 +22,12 @@ esp_err_t RemoteController::init(TcpClient *tcpClient) {
 }
 
 void RemoteController::doRemoteControlTask() {
-    while(1) {
-    	int t3 = 0;
-    	int t4 = 0;
-        if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
-            if (TcpClient::is_connected) {
-                xSemaphoreGive( TcpClient::error_semaphore );
-                velocityPublisher.publish();
-                vTaskDelay(10);
-                t3 = esp_timer_get_time();
-                nodeHandle.spinOnce();
-                t4 = esp_timer_get_time();
-            }
-            else {
-                xSemaphoreGive( TcpClient::error_semaphore );
-            }
-        }
-		std::cout << "SpinOnce: " << float(t4 - t3) / 1000000.0f << std::endl;
-		std::cout << "-----------------------------------" << std::endl;
-        vTaskDelay(10);
+	while(1) {
+		if (TcpClient::is_connected) {
+			velocityPublisher.publish();
+			nodeHandle.spinOnce();
+		}
+		t3 = esp_timer_get_time();
+        vTaskDelay(5);
     }
 }

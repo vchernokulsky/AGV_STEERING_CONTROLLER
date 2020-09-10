@@ -161,13 +161,10 @@ namespace ros {
             if (hardware_.read((uint8_t*) message_in, 4)){
             	msg_len = (uint16_t)(message_in[1] << 8) + (uint16_t) message_in[0];
             	topic_ = (uint16_t)(message_in[3] << 8) + (uint16_t) message_in[2];
-            	std::cout << "Length: " << msg_len << std::endl;
-            	std::cout << "Topic: " << topic_ << std::endl;
             	if (msg_len > INPUT_SIZE || msg_len < 0) {
 					return SPIN_ERR;
 				}
             	if(hardware_.read((uint8_t*) message_in, msg_len)){
-					std::cout << "get msg" << std::endl;
 					if (topic_ == TopicInfo::ID_TIME) {
 						syncTime(message_in);
 					} else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
@@ -186,11 +183,7 @@ namespace ros {
 							subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
 						}
 					}
-				}else {
-					std::cout << "Couldn't read msg " << std::endl;
 				}
-            } else {
-            	std::cout << "Couldn't read msg lengtha and topic id" << std::endl;
             }
 
             if (configured_ && ((c_time - last_sync_time) > (SYNC_SECONDS * 500)))

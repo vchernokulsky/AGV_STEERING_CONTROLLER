@@ -23,12 +23,10 @@ void TcpClient::init(const char *remote_ip, uint16_t port)
 
 void TcpClient::sock_recv(uint8_t *pData, uint16_t size, uint32_t* rdmaInd)
 {
-	std::cout << "Receiving...: " << std::endl;
     if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
         recv_data = (TcpClient::is_connected) ? recv(sock, pData, size, 0) : 0;
         xSemaphoreGive( TcpClient::error_semaphore );
     }
-    std::cout << "Received: " << recv_data << std::endl;
     *rdmaInd = (recv_data > 0) ? recv_data : 0;
 
     if( check_errno(recv_data) == ERROR_STATUS){
@@ -131,9 +129,6 @@ bool TcpClient::sock_recv_all(uint8_t *pData, uint16_t size) {
         	break;
         }
         msg_recv_data_counter += rdmaInd;
-        if(msg_recv_data_counter < size){
-        	vTaskDelay(10);
-        }
     }
     return msg_recv_data_counter == size;
 }
