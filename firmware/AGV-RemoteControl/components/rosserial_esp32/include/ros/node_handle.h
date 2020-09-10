@@ -45,7 +45,7 @@
 #include "rosserial_msgs/RequestParam.h"
 
 #include "ros/msg.h"
-
+#include <iostream>
 
 namespace ros {
 
@@ -151,13 +151,14 @@ namespace ros {
             static uint16_t topic;
 
             hardware_.read((uint8_t*) &msg_len, 2);
+            std::cout << "Length: " << msg_len << std::endl;
             hardware_.read((uint8_t*) &topic, 2);
+			std::cout << "Topic: " << topic << std::endl;
             if (msg_len > INPUT_SIZE || msg_len < 0) {
                 return SPIN_ERR;
             }
 
             hardware_.read((uint8_t*) message_in, msg_len);
-
 //            topic_ = (uint16_t)(message_in[1] << 8) + (uint16_t) message_in[0];
             topic_ = topic;
             if (topic_ == TopicInfo::ID_TIME) {
