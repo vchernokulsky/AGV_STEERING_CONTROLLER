@@ -40,6 +40,7 @@ void SocketClient::socket_receive(uint8_t *pData, uint16_t size, uint32_t* rdmaI
 	if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
 	{
 		recv_data = (SocketClient::is_connected) ? recv(sock, pData, size, 0) : 0;
+		osDelay(500);
 		xSemaphoreGive( SocketClient::error_semaphore );
 	}
 	*rdmaInd = (recv_data > 0) ? recv_data : 0;

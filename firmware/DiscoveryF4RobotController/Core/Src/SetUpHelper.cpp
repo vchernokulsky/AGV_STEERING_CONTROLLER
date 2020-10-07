@@ -50,7 +50,7 @@ void SetUpHelper::memory_init(I2C_HandleTypeDef *main_hi2c1)
 {
 	SetUpHelper::mem_out = main_hi2c1;
 	SetUpHelper::semaphore = xSemaphoreCreateMutex();
-	set_default(false);
+	set_default(true);
 	osDelay(100);
 
 	read_all();
@@ -274,6 +274,8 @@ void SetUpHelper::extract_variables()
 	SET_UP_SERVER_PORT = GET_NUM(SET_UP_SERVER_PORT_OFFSET);
 
 	GET_IP(SERIALNODE_IP_OFFSET, SERIALNODE_IP);
+	uint8_t ip[] = {192, 168, 55, 100};
+	memcpy(SERIALNODE_IP, ip, 4);
 	SERIALNODE_PORT = GET_NUM(SERIALNODE_PORT_OFFSET);
 
 	uint16_t radius_mm =  GET_NUM(WHEEL_RADIUS_OFFSET);

@@ -53,9 +53,28 @@ void MemManage_Handler(void);
 void BusFault_Handler(void);
 void UsageFault_Handler(void);
 void DebugMon_Handler(void);
+void PVD_IRQHandler(void);
+void FLASH_IRQHandler(void);
+void RCC_IRQHandler(void);
 void EXTI0_IRQHandler(void);
+void TIM1_BRK_TIM9_IRQHandler(void);
+void TIM1_UP_TIM10_IRQHandler(void);
+void TIM1_TRG_COM_TIM11_IRQHandler(void);
+void TIM1_CC_IRQHandler(void);
 void TIM2_IRQHandler(void);
+void TIM3_IRQHandler(void);
+void TIM4_IRQHandler(void);
+void I2C1_EV_IRQHandler(void);
+void I2C1_ER_IRQHandler(void);
+void USART1_IRQHandler(void);
+void TIM8_BRK_TIM12_IRQHandler(void);
+void TIM8_UP_TIM13_IRQHandler(void);
+void TIM8_TRG_COM_TIM14_IRQHandler(void);
+void TIM8_CC_IRQHandler(void);
+void SDIO_IRQHandler(void);
 void ETH_IRQHandler(void);
+void ETH_WKUP_IRQHandler(void);
+void FPU_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
