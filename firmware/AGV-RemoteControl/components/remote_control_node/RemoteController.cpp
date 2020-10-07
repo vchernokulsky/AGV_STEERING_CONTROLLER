@@ -5,6 +5,10 @@
 #include "include/RemoteController.h"
 #include "TcpClient.h"
 
+#include <iostream>
+#include "esp_timer.h"
+
+
 RemoteController::RemoteController() {
 
 }
@@ -18,18 +22,11 @@ esp_err_t RemoteController::init(TcpClient *tcpClient) {
 }
 
 void RemoteController::doRemoteControlTask() {
-    while(1) {
-        if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
-            if (TcpClient::is_connected) {
-                xSemaphoreGive( TcpClient::error_semaphore );
-                velocityPublisher.publish();
-                nodeHandle.spinOnce();
-            }
-            else {
-                xSemaphoreGive( TcpClient::error_semaphore );
-            }
-        }
-
-        vTaskDelay(1);
+	while(1) {
+		if (TcpClient::is_connected) {
+			velocityPublisher.publish();
+			nodeHandle.spinOnce();
+		}
+        vTaskDelay(5);
     }
 }

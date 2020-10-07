@@ -24,7 +24,7 @@ void TcpClient::sock_recv(uint8_t *pData, uint16_t size, uint32_t* rdmaInd)
 {
     if( xSemaphoreTake( TcpClient::error_semaphore, portMAX_DELAY) == pdTRUE ) {
         recv_data = (TcpClient::is_connected) ? recv(sock, pData, size, 0) : 0;
-        vTaskDelay(2000 / portTICK_PERIOD_MS); // задержка, конвертируемая из мс в тики
+        vTaskDelay(1500 / portTICK_PERIOD_MS); // задержка, конвертируемая из мс в тики
 
         xSemaphoreGive( TcpClient::error_semaphore );
     }

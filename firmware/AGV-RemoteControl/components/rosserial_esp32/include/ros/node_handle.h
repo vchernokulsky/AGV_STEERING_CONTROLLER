@@ -45,6 +45,7 @@
 #include "rosserial_msgs/RequestParam.h"
 
 #include "ros/msg.h"
+#include <iostream>
 
 namespace ros {
 
@@ -68,6 +69,8 @@ namespace ros {
     const int SPIN_OK = 0;
     const int SPIN_ERR = -1;
     const int SPIN_TIMEOUT = -2;
+
+    const uint8_t SYNC_SECONDS  = 5;
 
     using rosserial_msgs::TopicInfo;
 
@@ -146,33 +149,48 @@ namespace ros {
 
         virtual int spinOnce() {
 // Custom spinOnce
-            static uint16_t msg_len;
-            hardware_.read((uint8_t*) &msg_len, 2);
+            uint16_t msg_len;
 
-            if (msg_len > INPUT_SIZE || msg_len == 0) {
-                return SPIN_ERR;
+            uint32_t c_time = hardware_.time();
+
+            if ((c_time - last_sync_receive_time) > (SYNC_SECONDS * 2200))
+            {
+              configured_ = false;
             }
 
-            hardware_.read((uint8_t*) message_in, msg_len);
-
-            topic_ = (uint16_t)(message_in[1] << 8) + (uint16_t) message_in[0];
-
-            if (topic_ == TopicInfo::ID_TIME) {
-                syncTime(message_in);
-            } else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
-                req_param_resp.deserialize(message_in);
-                param_recieved = true;
-            } else if (topic_ == 0) {
-                requestSyncTime();
-                negotiateTopics();
-                return SPIN_ERR;
-            } else if (topic_ == TopicInfo::ID_TX_STOP) {
-                configured_ = false;
-            } else {
-                if (subscribers[topic_ - 100]) {
-                    subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
-                }
+            if (hardware_.read((uint8_t*) message_in, 4)){
+            	msg_len = (uint16_t)(message_in[1] << 8) + (uint16_t) message_in[0];
+            	topic_ = (uint16_t)(message_in[3] << 8) + (uint16_t) message_in[2];
+            	if (msg_len > INPUT_SIZE || msg_len < 0) {
+					return SPIN_ERR;
+				}
+            	if(hardware_.read((uint8_t*) message_in, msg_len)){
+					if (topic_ == TopicInfo::ID_TIME) {
+						syncTime(message_in);
+					} else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
+						req_param_resp.deserialize(message_in);
+						param_recieved = true;
+					} else if (topic_ == 0) {
+						requestSyncTime();
+						negotiateTopics();
+						last_sync_time = c_time;
+						last_sync_receive_time = c_time;
+						return SPIN_ERR;
+					} else if (topic_ == TopicInfo::ID_TX_STOP) {
+						configured_ = false;
+					} else {
+						if (subscribers[topic_ - 100]) {
+							subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
+						}
+					}
+				}
             }
+
+            if (configured_ && ((c_time - last_sync_time) > (SYNC_SECONDS * 500)))
+			{
+			  requestSyncTime();
+			  last_sync_time = c_time;
+			}
 
             return SPIN_OK;
         }
@@ -196,6 +214,8 @@ namespace ros {
             std_msgs::Time t;
             t.deserialize(data);
             this->setNow(t.data);
+
+            last_sync_receive_time = hardware_.time();
         }
 
         Time now() {
