@@ -73,20 +73,20 @@ void Error_Handler(void);
 #define BLUE_BTN_EXTI_IRQn EXTI0_IRQn
 #define BOOT1_Pin GPIO_PIN_2
 #define BOOT1_GPIO_Port GPIOB
-#define LWIP_LED_Pin GPIO_PIN_9
-#define LWIP_LED_GPIO_Port GPIOD
 #define EEPROM_LED_Pin GPIO_PIN_10
 #define EEPROM_LED_GPIO_Port GPIOD
-#define USR_LED_Pin GPIO_PIN_15
-#define USR_LED_GPIO_Port GPIOD
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
 #define SWCLK_GPIO_Port GPIOA
+#define USR_LED_Pin GPIO_PIN_3
+#define USR_LED_GPIO_Port GPIOD
 #define Audio_RST_Pin GPIO_PIN_4
 #define Audio_RST_GPIO_Port GPIOD
 #define OTG_FS_OverCurrent_Pin GPIO_PIN_5
 #define OTG_FS_OverCurrent_GPIO_Port GPIOD
+#define LWIP_LED_Pin GPIO_PIN_7
+#define LWIP_LED_GPIO_Port GPIOD
 #define MEMS_INT2_Pin GPIO_PIN_1
 #define MEMS_INT2_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
