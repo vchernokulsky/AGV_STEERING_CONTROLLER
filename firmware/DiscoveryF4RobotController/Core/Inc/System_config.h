@@ -71,7 +71,7 @@
  * otherwise it blinks (turns off when the number of errors
  * exceeds the specified threshold)	  */
 #define GPIO_LWIP_LED GPIOD
-#define PIN_LWIP_LED GPIO_PIN_9
+#define PIN_LWIP_LED LWIP_LED_Pin
 /************************************************/
 
 /********************NETWORK*********************/

@@ -692,7 +692,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void StartDefaultTask(void const * argument)
 {
   /* init code for LWIP */
-  //MX_LWIP_Init();
+//  MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
   run_app(&huart1, &hi2c1, &htim3, &htim4, &htim8, &htim1);
   /* Infinite loop */

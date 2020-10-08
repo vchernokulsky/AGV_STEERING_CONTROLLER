@@ -1,7 +1,7 @@
 #pragma once
 
 /******************** NETWORK ************************/
-#define DEFAULT_ROBOT_IP_ADRESS {192, 168, 55, 114}
+#define DEFAULT_ROBOT_IP_ADRESS {192, 168, 55, 115}
 #define DEFAULT_NETWORK_MASK {255, 255, 255, 0}
 #define DEFAULT_GATEAWAY {192, 168, 55, 1}
 #define DEFAULT_DHCP_CONFIG false
@@ -10,7 +10,7 @@
 /************************************************/
 
 /********************SERVER************************/
-#define DEFAULT_ROS_SERIALNODE_IP_ADRESS {192, 168, 55, 100}
+#define DEFAULT_ROS_SERIALNODE_IP_ADRESS {192, 168, 55, 50}
 #define DEFAULT_ROS_SERIALNODE_PORT 11411
 /************************************************/
 
