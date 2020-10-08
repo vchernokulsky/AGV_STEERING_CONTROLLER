@@ -69,8 +69,8 @@ class STM32Hardware {
 
     }
 
-    void read_stm32hw(uint8_t *buf, uint16_t size){
-		socket_client.socket_receive_all(buf, size);
+    bool read_stm32hw(uint8_t *buf, uint16_t size){
+    	return socket_client.socket_receive_all(buf, size);
     }
 
 

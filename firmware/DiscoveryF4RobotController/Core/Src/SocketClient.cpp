@@ -40,7 +40,7 @@ void SocketClient::socket_receive(uint8_t *pData, uint16_t size, uint32_t* rdmaI
 	if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
 	{
 		recv_data = (SocketClient::is_connected) ? recv(sock, pData, size, 0) : 0;
-		osDelay(500);
+		//osDelay(500);
 		xSemaphoreGive( SocketClient::error_semaphore );
 	}
 	*rdmaInd = (recv_data > 0) ? recv_data : 0;
@@ -151,12 +151,17 @@ uint8_t SocketClient::check_errno()
 	return UNKNOWN_STATUS;
 }
 
-void SocketClient::socket_receive_all(uint8_t *pData, uint16_t size) {
+bool SocketClient::socket_receive_all(uint8_t *pData, uint16_t size) {
 	uint16_t msg_recv_data_counter = 0;
 	uint32_t rdmaInd = 0;
+	uint16_t recv_try = RECV_WAIT_NUM;
 
 	while(msg_recv_data_counter < size) {
 		socket_receive((uint8_t*) &pData[msg_recv_data_counter], size - msg_recv_data_counter, (uint32_t*) &rdmaInd);
+		if (rdmaInd == 0 && (msg_recv_data_counter==0 || --recv_try == 0)){
+			break;
+		}
 		msg_recv_data_counter += rdmaInd;
 	}
+	return msg_recv_data_counter == size;
 }
