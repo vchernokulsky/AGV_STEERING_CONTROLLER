@@ -10,6 +10,7 @@
 #define PUT_IP(offset, val) \
 	memcpy(message_out + (offset), (val), IP_SIZE);
 #define PUT_DHCP_CONFIG(offset, config) message_out[offset] = config ? 1: 0
+#define PUT_BYTE(offset, val) message_out[offset] = val
 #define PUT_NUM(offset, val) \
 	message_out[(offset)] = (val) & 0xFF; \
 	message_out[(offset)+1] = (val) >> 8;
@@ -25,6 +26,8 @@
 
 #define GET_NUM(offset) \
 	(message_out[offset + 1] << 8) | message_out[offset]
+
+#define GET_BYTE(offset) message_out[offset]
 
 #define GET_TOPIC(offset, topic, null_char ) \
 	memcpy((topic), message_out + (offset) + 1, message_out[(offset)]); \
@@ -94,6 +97,7 @@ void SetUpHelper::set_default_network()
 
 void SetUpHelper::set_default_robot_geometry()
 {
+	uint8_t driver_type = DEFAULT_DRIVER_TYPE;
 	uint16_t radius = std::round(DEFAULT_RADIUS * 1000.0);
 	uint16_t separation = std::round(DEFAULT_WHEEL_SEPARATION * 1000.0);
 	uint16_t vel = std::round(DEFAULT_MAX_LIN_SPEED * 1000.0);
@@ -101,6 +105,7 @@ void SetUpHelper::set_default_robot_geometry()
 	uint16_t rad = std::round(DEFAULT_RAD_PER_TICK * 100000.0);
 	uint16_t pwd = DEFAULT_MAX_PWD_ALLOWED;
 
+	PUT_BYTE(DRIVER_TYPE_OFFSET, driver_type);
 	PUT_NUM(WHEEL_RADIUS_OFFSET, radius);
 	PUT_NUM(WHEEL_SEPARATION_OFFSET, separation);
 	PUT_NUM(MAX_LIN_VEL_OFFSET, vel);
@@ -275,6 +280,8 @@ void SetUpHelper::extract_variables()
 
 	GET_IP(SERIALNODE_IP_OFFSET, SERIALNODE_IP);
 	SERIALNODE_PORT = GET_NUM(SERIALNODE_PORT_OFFSET);
+
+	DRIVER_TYPE = GET_BYTE(DRIVER_TYPE_OFFSET);
 
 	uint16_t radius_mm =  GET_NUM(WHEEL_RADIUS_OFFSET);
 	WHEEL_RADIUS = (float)radius_mm / 1000.0f;

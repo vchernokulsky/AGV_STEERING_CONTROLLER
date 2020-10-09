@@ -12,10 +12,6 @@
 #define UART_TRANSMIT_DELAY 5
 /************************************************/
 
-/************* Motor driver type ***************/
-/** for BB driver required only LEN, REN RPWM **/
-#define DRIVER_TYPE BB
-
 
 /******************* DRIVER-1 *********************/
 #define GPIO_REN1 GPIOA

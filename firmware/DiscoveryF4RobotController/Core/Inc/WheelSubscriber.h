@@ -9,6 +9,7 @@
 class WheelSubscriber
 {
 private:
+	uint8_t motor_driver_type;
 	float max_lin_speed;
 	uint8_t max_pwd_allowed;
 
@@ -85,10 +86,10 @@ public:
 		cur_pwd += std::round(impact);
 		fit_limits(&cur_pwd);
 
-		if(DRIVER_TYPE == IBT){
+		if(motor_driver_type == IBT){
 			setIbtSpeed();
 		}
-		if(DRIVER_TYPE == BB){
+		if(motor_driver_type == BB){
 			setBbSpeed();
 		}
 	}
@@ -148,10 +149,10 @@ public:
 		pin_len = main_pin_len;
 
 		GPIO_PinState init_val = GPIO_PIN_RESET;
-		if(DRIVER_TYPE == IBT){
+		if(motor_driver_type == IBT){
 			init_val = GPIO_PIN_SET;
 		}
-		if(DRIVER_TYPE == BB){
+		if(motor_driver_type == BB){
 			init_val = GPIO_PIN_RESET;
 		}
 		HAL_GPIO_WritePin(gpio_ren, pin_ren, init_val);
@@ -162,14 +163,15 @@ public:
 		htim = main_htim;
 		Channel = main_channel;
 		Channel_rev = main_channel_rev;
-		if(DRIVER_TYPE == IBT){
+		if(motor_driver_type == IBT){
 			HAL_TIM_PWM_Start(htim, Channel);
 		}
 		HAL_TIM_PWM_Start(htim, Channel_rev);
 	}
 
-	void set_robot_params(float max_lin, uint8_t pwd)
+	void set_robot_params(uint8_t driver_type, float max_lin, uint8_t pwd)
 	{
+		motor_driver_type = driver_type;
 		max_lin_speed = max_lin;
 		max_pwd_allowed = pwd;
 	}

@@ -27,12 +27,12 @@ void RosHelper::setupRos(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_
 	//===Right wheel===
 	wheel.set_pins(GPIO_REN1, PIN_REN1, GPIO_LEN1, PIN_LEN1);
 	wheel.set_timers(main_htim, CHANNEL1, CHANNEL_REV1);
-	wheel.set_robot_params(settings->MAX_LIN_SPEED, settings->MAX_PWD_ALLOWED);
+	wheel.set_robot_params(settings->DRIVER_TYPE, settings->MAX_LIN_SPEED, settings->MAX_PWD_ALLOWED);
 
 	//===Left wheel===
 	wheel2.set_pins(GPIO_REN2, PIN_REN2, GPIO_LEN2, PIN_LEN2);
 	wheel2.set_timers(main_htim2, CHANNEL2, CHANNEL_REV2);
-	wheel2.set_robot_params(settings->MAX_LIN_SPEED, settings->MAX_PWD_ALLOWED);
+	wheel2.set_robot_params(settings->DRIVER_TYPE, settings->MAX_LIN_SPEED, settings->MAX_PWD_ALLOWED);
 
 	//===Right encoder===
 	encoder.init(encoder_htim);

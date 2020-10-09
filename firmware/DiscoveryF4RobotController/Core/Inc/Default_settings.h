@@ -27,4 +27,9 @@
 
 #define DEFAULT_MAX_LIN_SPEED 1.9
 #define DEFAULT_ANG_VEL_MAX 3.8
+
+/************* Motor driver type ***************/
+/** for BB driver required only LEN, REN RPWM **/
+#define DEFAULT_DRIVER_TYPE BB
+
 /************************************************/
