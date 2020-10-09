@@ -3,33 +3,40 @@
 #define IP_SIZE 4
 #define NUM_SIZE 2
 
+#define IBT 0
+#define BB 1
+
 /********************UART************************/
 #define UART_BUF_SIZE 30
 #define UART_QUEUE_LEN 25
 #define UART_TRANSMIT_DELAY 5
 /************************************************/
 
+/************* Motor driver type ***************/
+/** for BB driver required only LEN, REN RPWM **/
+#define DRIVER_TYPE BB
 
-/******************* IBT-1 *********************/
+
+/******************* DRIVER-1 *********************/
 #define GPIO_REN1 GPIOA
 #define PIN_REN1 GPIO_PIN_15
 
 #define GPIO_LEN1 GPIOA
 #define PIN_LEN1 GPIO_PIN_8
 
-#define CHANNEL1 TIM_CHANNEL_3
-#define CHANNEL_REV1 TIM_CHANNEL_4
+#define CHANNEL1 TIM_CHANNEL_3 //LPWM
+#define CHANNEL_REV1 TIM_CHANNEL_4 //RPWM
 /**********************************************/
 
-/******************* IBT-2 *********************/
+/******************* DRIVER-2 *********************/
 #define GPIO_REN2 GPIOD
 #define PIN_REN2 GPIO_PIN_12
 
 #define GPIO_LEN2 GPIOD
 #define PIN_LEN2 GPIO_PIN_11
 
-#define CHANNEL2 TIM_CHANNEL_2
-#define CHANNEL_REV2 TIM_CHANNEL_3
+#define CHANNEL2 TIM_CHANNEL_2 //LPWM
+#define CHANNEL_REV2 TIM_CHANNEL_3 //RPWM
 /**********************************************/
 
 /*******************CONTROL****************/

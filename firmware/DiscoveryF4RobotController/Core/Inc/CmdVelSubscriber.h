@@ -98,8 +98,8 @@ public:
 		cur_time = HAL_GetTick();
 		delta_time = cur_time - last_time;
 		if(delta_time >  CMDVEL_TIMEOUT){
-			left_wheel->wheel_callback(0.0);
-			right_wheel->wheel_callback(0.0);
+			left_wheel->wheel_reset();
+			right_wheel->wheel_reset();
 		}
 
 	}

@@ -15,6 +15,10 @@ private:
 	TIM_HandleTypeDef *htim;
 	uint32_t Channel;
 	uint32_t Channel_rev;
+	GPIO_TypeDef* gpio_ren;
+	uint16_t pin_ren;
+	GPIO_TypeDef* gpio_len;
+	uint16_t pin_len;
 
 	int16_t target_vel;
 	int16_t cur_pwd;
@@ -32,6 +36,9 @@ private:
 
 
 public:
+	void wheel_reset(){
+		target_vel = 0;
+	}
 
 	void wheel_callback(float data){
 		target_vel = std::round(data / max_lin_speed * MAX_PWD);
@@ -39,9 +46,6 @@ public:
 	}
 
 	void set_speed(int16_t cur_vel){
-		uint8_t speed = 0;
-		uint8_t speed_rev = 0;
-
 		err_cur = target_vel - cur_vel;
 
 		/***** P step regulator ******/
@@ -81,6 +85,17 @@ public:
 		cur_pwd += std::round(impact);
 		fit_limits(&cur_pwd);
 
+		if(DRIVER_TYPE == IBT){
+			setIbtSpeed();
+		}
+		if(DRIVER_TYPE == BB){
+			setBbSpeed();
+		}
+	}
+
+	void setIbtSpeed(){
+		uint8_t speed = 0;
+		uint8_t speed_rev = 0;
 		if(cur_pwd > 0){
 			speed = cur_pwd;
 		}
@@ -90,6 +105,25 @@ public:
 
 		__HAL_TIM_SetCompare(htim, Channel, speed);
 		__HAL_TIM_SetCompare(htim, Channel_rev, speed_rev);
+	}
+
+	void setBbSpeed(){
+		GPIO_PinState ren_val = GPIO_PIN_RESET;
+		GPIO_PinState len_val = GPIO_PIN_RESET;
+		uint8_t speed = 0;
+		if(cur_pwd > 0){
+			speed = cur_pwd;
+			len_val = GPIO_PIN_SET;
+			ren_val = GPIO_PIN_RESET;
+		}
+		if(cur_pwd < 0){
+			speed = (-1) * cur_pwd;
+			len_val = GPIO_PIN_RESET;
+			ren_val = GPIO_PIN_SET;
+		}
+		HAL_GPIO_WritePin(gpio_ren, pin_ren, ren_val);
+		HAL_GPIO_WritePin(gpio_len, pin_len, len_val);
+		__HAL_TIM_SetCompare(htim, Channel_rev, speed);
 
 	}
 
@@ -107,16 +141,30 @@ public:
 		Kd = KD_DEFAULT;
 	}
 
-	void set_pins(GPIO_TypeDef* gpio_ren, uint16_t pin_ren,GPIO_TypeDef* gpio_len, uint16_t pin_len){
-		HAL_GPIO_WritePin(gpio_ren, pin_ren, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(gpio_len, pin_len, GPIO_PIN_SET);
+	void set_pins(GPIO_TypeDef* main_gpio_ren, uint16_t main_pin_ren,GPIO_TypeDef* main_gpio_len, uint16_t main_pin_len){
+		gpio_ren = main_gpio_ren;
+		pin_ren = main_pin_ren;
+		gpio_len = main_gpio_len;
+		pin_len = main_pin_len;
+
+		GPIO_PinState init_val = GPIO_PIN_RESET;
+		if(DRIVER_TYPE == IBT){
+			init_val = GPIO_PIN_SET;
+		}
+		if(DRIVER_TYPE == BB){
+			init_val = GPIO_PIN_RESET;
+		}
+		HAL_GPIO_WritePin(gpio_ren, pin_ren, init_val);
+		HAL_GPIO_WritePin(gpio_len, pin_len, init_val);
 	}
 
 	void set_timers(TIM_HandleTypeDef *main_htim, uint32_t main_channel, uint32_t main_channel_rev){
 		htim = main_htim;
 		Channel = main_channel;
 		Channel_rev = main_channel_rev;
-		HAL_TIM_PWM_Start(htim, Channel);
+		if(DRIVER_TYPE == IBT){
+			HAL_TIM_PWM_Start(htim, Channel);
+		}
 		HAL_TIM_PWM_Start(htim, Channel_rev);
 	}
 
