@@ -191,7 +191,7 @@ public:
 							configured_ = false;
 						} else {
 							if (subscribers[topic_ - 100]) {
-								subscribers[topic_ - 100]->callback(message_in + 2); // первые 2 байта - id топика, затем сообщение
+								subscribers[topic_ - 100]->callback(message_in);
 							}
 						}
 					}
