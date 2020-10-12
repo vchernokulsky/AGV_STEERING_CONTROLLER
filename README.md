@@ -11,12 +11,10 @@ _firmware/DiscoveryF4RobotController/Core/Src/main.c_
      /* init code for LWIP */
     //  MX_LWIP_Init();
 
-* Приритет прирываний ETH должен быть выставлен в 5
+### Настройка прерываний
 
-_firmware/DiscoveryF4RobotController/LWIP/Target/ethernetif.c_
+(Pinout&Configuration -> System View -> NVIC Mode and Configuration)
+* Прерывания Ethernet должны быть включены, а их приоритеты выставлены в значение 5
+* Прерывание FPU должно быть выключено
 
-    /* Peripheral interrupt init */
-    HAL_NVIC_SetPriority(ETH_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(ETH_IRQn);
-    HAL_NVIC_SetPriority(ETH_WKUP_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(ETH_WKUP_IRQn);
+![NCIC setup](_docs/img/nvic.png)
