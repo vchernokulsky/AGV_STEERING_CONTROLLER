@@ -53,7 +53,7 @@ void SetUpHelper::memory_init(I2C_HandleTypeDef *main_hi2c1)
 {
 	SetUpHelper::mem_out = main_hi2c1;
 	SetUpHelper::semaphore = xSemaphoreCreateMutex();
-	set_default(true);
+	set_default(false);
 	osDelay(100);
 
 	read_all();
