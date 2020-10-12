@@ -72,14 +72,14 @@ void SocketServer::SocketServerTask()
 			if(remote_sock >= 0)
 			{
 				socket_receive(recv_buffer, MAX_SETTING_SIZE,&rdmaInd);
-				if(recv_buffer[0] == 255 && recv_buffer[1] == 255)
-				{
-					uint16_t response_len;
-					settings->get_setup_response(send_buffer, &response_len);
-					socket_send(send_buffer, response_len);
-				} else
-				{
-					if(recv_buffer[0] == 255 && recv_buffer[1] == 254)
+				if(recv_buffer[0] == 255){
+					if(recv_buffer[1] == 255)
+					{
+						uint16_t response_len;
+						settings->get_setup_response(send_buffer, &response_len);
+						socket_send(send_buffer, response_len);
+					}
+					if(recv_buffer[1] == 254)
 					{
 						if (settings->set(recv_buffer)){
 							socket_send(ok_status, STAUS_SIZE);
@@ -88,7 +88,12 @@ void SocketServer::SocketServerTask()
 							socket_send(err_status, STAUS_SIZE);
 						}
 					}
+					if(recv_buffer[1] == 253){
+						char* firmware_info = FIRMWARE_VERSION_STR;
+						socket_send((uint8_t*)firmware_info, FIRMWARE_VERSION_STR_LEN);
+					}
 				}
+
 
 				osDelay(100);
 			}

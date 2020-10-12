@@ -12,6 +12,7 @@
 #include "cmsis_os.h"
 
 #define FIRMWARE_VERSION_STR "v0.0.0"
+#define FIRMWARE_VERSION_STR_LEN 7
 
 #define FIRMWARE_VERSION_BUF {0, 0, 0}
 #define FIRMWARE_VERSION_BUF_LEN 3
