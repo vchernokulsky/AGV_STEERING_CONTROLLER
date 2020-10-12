@@ -1,3 +1,4 @@
+import 'package:AgvConfigurator/Inputs/SelectFromListInput.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class _RobotGeometry extends State<RobotGeometry> {
   DecimalInput maxAngVelocity;
   NumericInput maxPwdAllowed;
   DecimalInput radPerTick;
+  SelectFromList driverType;
 
   _RobotGeometry() {
     wheelRadius =
@@ -31,8 +33,10 @@ class _RobotGeometry extends State<RobotGeometry> {
         title: "max angular velocity", minValue: 0.1, maxValue: 10.0);
     maxPwdAllowed =
         NumericInput(title: "Max PWD allowed", minValue: 0, maxValue: 255);
-    radPerTick =
-        DecimalInput(title: "Rad per tick", minValue: 0.0, maxValue: 0.6, decimal: 5);
+    radPerTick = DecimalInput(
+        title: "Rad per tick", minValue: 0.0, maxValue: 0.6, decimal: 5);
+    driverType = SelectFromList(
+        title: "Robot motor driver", nameList: List.from(['IBT', 'BB']));
   }
 
   void initState() {
@@ -90,6 +94,7 @@ class _RobotGeometry extends State<RobotGeometry> {
     radPerTick.controller.text = SocketData.radPerTick;
     return Column(
       children: <Widget>[
+        driverType,
         wheelRadius,
         wheelSeparation,
         maxLinVelocity,
@@ -101,18 +106,22 @@ class _RobotGeometry extends State<RobotGeometry> {
           children: <Widget>[
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal:2.0),
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: RaisedButton(
-                  child: Text("Reset"), onPressed: reset,
-                  padding: EdgeInsets.symmetric(vertical: 15),),
+                  child: Text("Reset"),
+                  onPressed: reset,
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                ),
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal:2.0),
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: RaisedButton(
-                  child: Text("Save"), onPressed: save,
-                  padding: EdgeInsets.symmetric(vertical: 15),),
+                  child: Text("Save"),
+                  onPressed: save,
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                ),
               ),
             ),
 //            RaisedButton(child: Text("Reset"), onPressed: reset),
