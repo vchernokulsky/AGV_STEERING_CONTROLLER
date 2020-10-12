@@ -74,7 +74,6 @@ void TIM8_CC_IRQHandler(void);
 void SDIO_IRQHandler(void);
 void ETH_IRQHandler(void);
 void ETH_WKUP_IRQHandler(void);
-void FPU_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

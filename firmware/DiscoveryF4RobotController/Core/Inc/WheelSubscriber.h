@@ -42,7 +42,7 @@ public:
 	}
 
 	void wheel_callback(float data){
-		target_vel = std::round(data / max_lin_speed * MAX_PWD);
+		target_vel = (int)std::round(data / max_lin_speed * MAX_PWD);
 		fit_limits(&target_vel);
 	}
 
