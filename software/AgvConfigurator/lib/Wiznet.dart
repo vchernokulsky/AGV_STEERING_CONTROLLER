@@ -70,6 +70,7 @@ class _Wiznet extends State<Wiznet> {
     SocketData.gateAway = gateAwayInput.controller.text;
     SocketData.rosClientPort = localRosPort.controller.text;
     SocketData.setupServerPort = setUpServerPort.controller.text;
+    SocketData.dhcpConfig = useDhcp.dataBool.data;
     showGoodToast("Data saved");
   }
   bool status = false;
@@ -80,6 +81,7 @@ class _Wiznet extends State<Wiznet> {
     gateAwayInput.controller.text = SocketData.gateAway;
     localRosPort.controller.text = SocketData.rosClientPort;
     setUpServerPort.controller.text = SocketData.setupServerPort;
+    useDhcp.dataBool.data = SocketData.dhcpConfig;
     return Column(
       children: <Widget>[
         useDhcp,

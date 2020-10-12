@@ -2,23 +2,28 @@ import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class DataBool{
+  bool data;
+  DataBool(this.data);
+}
+
 class BoolInput extends StatefulWidget {
   final String title;
+  final DataBool dataBool = DataBool(false);
 
   BoolInput({Key key, this.title}) : super(key: key);
 
-  _BoolInput createState() => _BoolInput(title);
+  _BoolInput createState() => _BoolInput(title, dataBool);
 }
 
 class _BoolInput extends State<BoolInput> {
-  _BoolInput(this.title);
+  _BoolInput(this.title, this.dataBool);
 
   final String title;
-  bool status;
+  final DataBool dataBool;
 
   void initState() {
     super.initState();
-    status = false;
   }
 
   Widget build(BuildContext context) {
@@ -28,12 +33,12 @@ class _BoolInput extends State<BoolInput> {
       child: Row(
         children: <Widget>[
           CustomSwitch(
-            activeColor: Colors.pinkAccent,
-            value: status,
+            activeColor: Color(0xff2ada9a),
+            value: dataBool.data,
             onChanged: (value) {
               print("VALUE : $value");
               setState(() {
-                status = value;
+                dataBool.data = value;
               });
             },
           ),

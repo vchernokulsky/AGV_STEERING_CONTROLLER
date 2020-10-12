@@ -53,6 +53,9 @@ class SocketData extends ChangeNotifier {
   static String localIpAddress = "";
   static String networkMask = "";
   static String gateAway = "";
+
+  static bool dhcpConfig = true;
+
   static String rosClientPort = "";
   static String setupServerPort = "";
   static String serialNodeIp = "";
