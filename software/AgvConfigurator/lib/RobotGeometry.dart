@@ -81,6 +81,7 @@ class _RobotGeometry extends State<RobotGeometry> {
     SocketData.maxAngVelocity = maxAngVelocity.controller.text;
     SocketData.maxPwdAllowed = maxPwdAllowed.controller.text;
     SocketData.radPerTick = radPerTick.controller.text;
+    SocketData.driverType = driverType.selectData.data;
     showGoodToast("Data saved");
   }
 
@@ -92,6 +93,7 @@ class _RobotGeometry extends State<RobotGeometry> {
     maxAngVelocity.controller.text = SocketData.maxAngVelocity;
     maxPwdAllowed.controller.text = SocketData.maxPwdAllowed;
     radPerTick.controller.text = SocketData.radPerTick;
+    driverType.selectData.data = SocketData.driverType;
     return Column(
       children: <Widget>[
         driverType,

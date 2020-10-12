@@ -61,6 +61,7 @@ class SocketData extends ChangeNotifier {
   static String serialNodeIp = "";
   static String serialNodePort = "";
 
+  static int driverType = 0;
   static String wheelRadius = "";
   static String wheelSeparation = "";
   static String maxLinVelocity = "";

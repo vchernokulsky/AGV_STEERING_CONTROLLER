@@ -2,14 +2,22 @@ import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class SelectData{
+  int data;
+  SelectData(this.data);
+}
+
 class SelectFromList extends StatefulWidget {
   final String title;
   final List<String> nameList;
+  SelectData selectData = SelectData(0);
 
   SelectFromList({Key key, this.title, this.nameList}) : super(key: key);
 
-  _SelectFromList createState() => _SelectFromList(title, nameList);
+  _SelectFromList createState() => _SelectFromList(title, nameList, selectData);
 }
+
+
 
 class ListItem {
   int value;
@@ -19,14 +27,14 @@ class ListItem {
 }
 
 class _SelectFromList extends State<SelectFromList> {
-  _SelectFromList(this.title, this.nameList);
+  _SelectFromList(this.title, this.nameList, this.selectData);
 
   final String title;
   final List<String> nameList;
+  final SelectData selectData;
   List<ListItem> _dropdownItems = [];
 
   List<DropdownMenuItem<int>> _dropdownMenuItems;
-  int _selectedItem;
 
   List<DropdownMenuItem<int>> buildDropDownMenuItems() {
     List<DropdownMenuItem<int>> items = List();
@@ -48,7 +56,6 @@ class _SelectFromList extends State<SelectFromList> {
       _dropdownItems.add(ListItem(i, nameList[i]));
     }
     _dropdownMenuItems = buildDropDownMenuItems();
-    _selectedItem = _dropdownMenuItems[0].value;
   }
 
   Widget build(BuildContext context) {
@@ -62,11 +69,11 @@ class _SelectFromList extends State<SelectFromList> {
                   padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
                   child: Text('$title', style: TextStyle(fontSize: 18)))),
           DropdownButton<int>(
-              value: _selectedItem,
+              value: selectData.data,
               items: _dropdownMenuItems,
               onChanged: (value) {
                 setState(() {
-                  _selectedItem = value;
+                  selectData.data = value;
                 });
               }),
 
