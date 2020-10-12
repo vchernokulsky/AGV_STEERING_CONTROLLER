@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:stm_setup/CustomListTile.dart';
-import 'package:stm_setup/SocketData.dart';
+
+import 'CustomListTile.dart';
+import 'SocketData.dart';
+
 
 class AboutDiffDrive extends StatefulWidget {
   AboutDiffDrive({Key key}) : super(key: key);

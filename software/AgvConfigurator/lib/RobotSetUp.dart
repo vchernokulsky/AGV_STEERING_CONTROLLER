@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:stm_setup/AboutDiffDrive.dart';
-import 'package:stm_setup/RobotConnect.dart';
-import 'package:stm_setup/RobotGeometry.dart';
-import 'package:stm_setup/RosTopics.dart';
-import 'package:stm_setup/Wiznet.dart';
-
+import 'AboutDiffDrive.dart';
+import 'RobotConnect.dart';
+import 'RobotGeometry.dart';
+import 'RosTopics.dart';
 import 'SocketData.dart';
+import 'Wiznet.dart';
 
 class RobotSetUp extends StatefulWidget {
   _RobotSetUpState createState() => _RobotSetUpState();

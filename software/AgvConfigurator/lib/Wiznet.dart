@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stm_setup/Inputs/IpInput.dart';
-import 'package:stm_setup/SocketData.dart';
 
+
+import 'Inputs/IpInput.dart';
 import 'Inputs/NumericInput.dart';
 import 'ShowToast.dart';
+import 'SocketData.dart';
 
 class Wiznet extends StatefulWidget {
   const Wiznet({Key key}) : super(key: key);

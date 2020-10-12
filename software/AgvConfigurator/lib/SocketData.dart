@@ -2,15 +2,12 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import "package:hex/hex.dart";
-import 'package:stm_setup/Inputs/DecimalInput.dart';
-import 'package:stm_setup/Inputs/MacInput.dart';
-import 'package:stm_setup/Inputs/NumericInput.dart';
-import 'package:stm_setup/Inputs/TopicNameInput.dart';
-import 'package:stm_setup/CustomListTile.dart';
 
+import 'CustomListTile.dart';
+import 'Inputs/DecimalInput.dart';
 import 'Inputs/IpInput.dart';
+import 'Inputs/NumericInput.dart';
+import 'Inputs/TopicNameInput.dart';
 import 'ShowToast.dart';
 
 class SocketData extends ChangeNotifier {

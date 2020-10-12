@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stm_setup/Inputs/IpInput.dart';
-import 'package:stm_setup/Inputs/NumericInput.dart';
-import 'package:stm_setup/Inputs/TopicNameInput.dart';
-
+import 'Inputs/IpInput.dart';
+import 'Inputs/NumericInput.dart';
+import 'Inputs/TopicNameInput.dart';
 import 'ShowToast.dart';
 import 'SocketData.dart';
 
