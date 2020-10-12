@@ -1,5 +1,7 @@
+import 'package:AgvConfigurator/Inputs/BoolInput.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:custom_switch/custom_switch.dart';
 
 
 import 'Inputs/IpInput.dart';
@@ -19,6 +21,7 @@ class _Wiznet extends State<Wiznet> {
   IpInput gateAwayInput;
   NumericInput localRosPort;
   NumericInput setUpServerPort;
+  BoolInput useDhcp;
 
   _Wiznet() {
     ipInput = IpInput(title: "Robot IP");
@@ -28,6 +31,7 @@ class _Wiznet extends State<Wiznet> {
         title: "Roboto ROS client port", minValue: 0, maxValue: 65555);
     setUpServerPort =
         NumericInput(title: "Robot SetUpServer port", minValue: 0, maxValue: 65555);
+    useDhcp = BoolInput(title: 'Use DHCP');
   }
 
   void initState() {
@@ -68,7 +72,7 @@ class _Wiznet extends State<Wiznet> {
     SocketData.setupServerPort = setUpServerPort.controller.text;
     showGoodToast("Data saved");
   }
-
+  bool status = false;
   @override
   Widget build(BuildContext context) {
     ipInput.controller.text = SocketData.localIpAddress;
@@ -78,6 +82,7 @@ class _Wiznet extends State<Wiznet> {
     setUpServerPort.controller.text = SocketData.setupServerPort;
     return Column(
       children: <Widget>[
+        useDhcp,
         ipInput,
         localRosPort,
         setUpServerPort,
