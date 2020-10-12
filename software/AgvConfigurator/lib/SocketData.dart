@@ -34,14 +34,15 @@ class SocketData extends ChangeNotifier {
   final int serialNodeIpOffset = 23;
   final int serialNodePortOffset = 27;
 
-  final int wheelRadiusOffset = 29;
-  final int wheelSeparationOffset = 31;
-  final int maxLinVelocityOffset = 33;
-  final int maxAngVelocityOffset = 35;
-  final int radPerTickOffset = 37;
-  final int maxPwdAllowedOffset = 39;
+  final int driverTypeOffset = 29;
+  final int wheelRadiusOffset = 30;
+  final int wheelSeparationOffset = 32;
+  final int maxLinVelocityOffset = 34;
+  final int maxAngVelocityOffset = 36;
+  final int radPerTickOffset = 38;
+  final int maxPwdAllowedOffset = 40;
 
-  final int topicsOffset = 40;
+  final int topicsOffset = 42;
 
   final int firmwareVersionOffset = 71;
 
@@ -128,13 +129,16 @@ class SocketData extends ChangeNotifier {
   }
 
   Uint8List createMsg() {
+    int dhcpVal = dhcpConfig? 1: 0;
     List<int> msgBody = IpInput.stringToBytes(localIpAddress) +
         IpInput.stringToBytes(networkMask) +
         IpInput.stringToBytes(gateAway) +
+        [dhcpVal] +
         NumericInput.stringToBytes(rosClientPort) +
         NumericInput.stringToBytes(setupServerPort) +
         IpInput.stringToBytes(serialNodeIp) +
         NumericInput.stringToBytes(serialNodePort) +
+        [driverType] +
         NumericInput.stringToBytes(wheelRadius) +
         NumericInput.stringToBytes(wheelSeparation) +
         DecimalInput.stringToBytes(maxLinVelocity, 3) +
@@ -179,9 +183,9 @@ class SocketData extends ChangeNotifier {
       chkSum %= 256;
     }
 
-//    if(chkSum != 255){
-//      return;
-//    }
+    if(chkSum != 255){
+      return;
+    }
 
     localIpAddress = IpInput.bytesToString(
         data.sublist(localIpOffset, localIpOffset + ipSize));
@@ -189,6 +193,8 @@ class SocketData extends ChangeNotifier {
         data.sublist(networkMaskOffset, networkMaskOffset + ipSize));
     gateAway = IpInput.bytesToString(
         data.sublist(gateAwayOffset, gateAwayOffset + ipSize));
+    int dhcpRead = data.elementAt(dhcpConfigOffset) ;
+    dhcpConfig = (dhcpRead == 1);
     rosClientPort = NumericInput.bytesToString(
         data.sublist(rosClientPortOffset, rosClientPortOffset + numSize));
     setupServerPort = NumericInput.bytesToString(
@@ -198,6 +204,7 @@ class SocketData extends ChangeNotifier {
     serialNodePort = NumericInput.bytesToString(
         data.sublist(serialNodePortOffset, serialNodePortOffset + numSize));
 
+    driverType = data.elementAt(driverTypeOffset);
     wheelRadius = NumericInput.bytesToString(
         data.sublist(wheelRadiusOffset, wheelRadiusOffset + numSize));
     wheelSeparation = NumericInput.bytesToString(
@@ -253,7 +260,7 @@ class SocketData extends ChangeNotifier {
         data.sublist(curOffset, curOffset + strSize));
     curOffset += strSize;
 
-    firmwareVersion = CustomListTile.bytesToFirmwareVersion(
-        data.sublist(firmwareVersionOffset, firmwareVersionOffset + firmwareVersionSize));
+//    firmwareVersion = CustomListTile.bytesToFirmwareVersion(
+//        data.sublist(firmwareVersionOffset, firmwareVersionOffset + firmwareVersionSize));
   }
 }
