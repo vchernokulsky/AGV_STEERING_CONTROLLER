@@ -82,7 +82,8 @@ void UartLogger::logNewLine() {
 }
 
 void UartLogger::logAddress(uint8_t *addr) {
-	char str[12];
+	char str[15];
+	memset(str, 0x0, 15);
 	sprintf(str, "%d.%d.%d.%d", addr[0], addr[1], addr[2], addr[3]);
 	log(str);
 }
