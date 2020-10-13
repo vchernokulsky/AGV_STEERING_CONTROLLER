@@ -77,6 +77,35 @@ class SocketData extends ChangeNotifier {
 
   static String firmwareVersion = "";
 
+  bool gettingFirmware = false;
+
+  void getFirmwareVersion() async {
+      try {
+        gettingFirmware = true;
+        print(gettingFirmware);
+        final Socket client =
+        await Socket.connect(connectHost, connectPort, timeout: timeout);
+        client.add(Uint8List.fromList([255, 253]));
+        client.listen((Uint8List data) {
+          firmwareVersion = String.fromCharCodes(data);
+          notifyListeners();
+        }, onDone: () {
+          print('Done');
+          client.close();
+          gettingFirmware = false;
+          print(gettingFirmware);
+        }, onError: (e) {
+          print('Got error $e');
+          client.close();
+        });
+        print('main done');
+      } on SocketException catch (e) {
+        print(e.toString());
+        showBadToast("cannot connect to robot");
+      }
+
+  }
+
   void getInfo({bool force = false}) async {
     if (force || !getData) {
       try {

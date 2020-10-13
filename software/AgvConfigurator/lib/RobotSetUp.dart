@@ -93,7 +93,7 @@ class _RobotSetUpState extends State<RobotSetUp> {
                   ),
                   Visibility(
                     visible: curItem == DIFF_DRIVE,
-                    child: AboutDiffDrive(),
+                    child: AboutDiffDrive(socketData: model,),
                   ),
                 ],
               ),
