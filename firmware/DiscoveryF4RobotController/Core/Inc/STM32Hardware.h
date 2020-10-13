@@ -45,21 +45,8 @@ extern SocketClient socket_client;
 class STM32Hardware {
   protected:
 
-
-    const static uint16_t rbuflen = 1024;
-    uint8_t rbuf[rbuflen];
-    uint32_t rdmaInd;
-    uint32_t rind;
-
-
-    const static uint16_t tbuflen = 1024;
-    uint8_t tbuf[tbuflen];
-    uint32_t twind, tfind;
-
   public:
-    STM32Hardware():
-      rind(0), twind(0), tfind(0){
-    }
+    STM32Hardware(){ }
 
     void init(){
 
