@@ -58,6 +58,7 @@ public:
 	virtual ~UartLogger();
 
 	void setUart(UART_HandleTypeDef *huart);
+	void logCheckEnc(int val, int val2, int dir);
 	void log(const char *str);
 	void logNewLine();
 	void logAddress(uint8_t* addr); // IP, gateway, network mask

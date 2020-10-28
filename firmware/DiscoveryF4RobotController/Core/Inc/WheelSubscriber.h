@@ -48,7 +48,8 @@ public:
 
 	void set_speed(int16_t cur_vel){
 		err_cur = target_vel - cur_vel;
-
+		if (cur_vel != 0)
+			err_cur = target_vel - cur_vel;
 		/***** P step regulator ******/
 		impact = 1;
 		if (err_cur < 0){
@@ -122,9 +123,14 @@ public:
 			len_val = GPIO_PIN_RESET;
 			ren_val = GPIO_PIN_SET;
 		}
-		HAL_GPIO_WritePin(gpio_ren, pin_ren, ren_val);
-		HAL_GPIO_WritePin(gpio_len, pin_len, len_val);
-		__HAL_TIM_SetCompare(htim, Channel_rev, speed);
+//		HAL_GPIO_WritePin(gpio_ren, pin_ren, ren_val);
+//		HAL_GPIO_WritePin(gpio_len, pin_len, len_val);
+//		__HAL_TIM_SetCompare(htim, Channel_rev, speed);
+
+		HAL_GPIO_WritePin(gpio_ren, pin_ren, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(gpio_len, pin_len, GPIO_PIN_RESET);
+		__HAL_TIM_SetCompare(htim, Channel_rev, 255);
+
 
 	}
 

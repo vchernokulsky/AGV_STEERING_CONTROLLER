@@ -88,6 +88,15 @@ void UartLogger::logAddress(uint8_t *addr) {
 	log(str);
 }
 
+void UartLogger::logCheckEnc(int val, int val2, int dir) {
+	log("direction: ");
+	logInt(dir);
+	log("    cur_tick: ");
+	logInt(val);
+	log("   delta_tick: ");
+	logInt(val2);
+	log("\n");
+}
 void UartLogger::logDhcp(bool use_dhcp) {
 	log(use_dhcp ? "true": "false");
 }

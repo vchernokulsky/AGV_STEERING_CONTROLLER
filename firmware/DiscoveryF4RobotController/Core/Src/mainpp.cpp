@@ -92,7 +92,7 @@ void threds_setup(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_htim2, 
 {
 	socket_client.init(settings.ROS_CLIENT_PORT, settings.SERIALNODE_IP, settings.SERIALNODE_PORT);
 	socket_server.init(&settings);
-	ros_helper.setupRos(main_htim, main_htim2, encoder_htim, encoder_htim2, &settings);
+	ros_helper.setupRos(main_htim, main_htim2, encoder_htim, encoder_htim2, &settings, &uartLogger);
 
 	//****** Client Task **********
 	sys_thread_new("client_thread", StartSocetClientTask, 0, DEFAULT_THREAD_STACKSIZE * 2, osPriorityNormal);
@@ -102,7 +102,7 @@ void threds_setup(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_htim2, 
 	sys_thread_new("wheel1_thread", StartSetSpeedTask, 0, 256, osPriorityNormal);
 	sys_thread_new("wheel2_thread", StartSetSpeedTask2, 0, 256, osPriorityNormal);
 	sys_thread_new("encoder1_thread", StartEncoderTask, 0, 256, osPriorityNormal);
-	sys_thread_new("encoder2_thread", StartEncoderTask2, 0, 256, osPriorityNormal);
+//	sys_thread_new("encoder2_thread", StartEncoderTask2, 0, 256, osPriorityNormal);
 	sys_thread_new("cmdvel_timeout_thread", StartCmdvelTimeoutRask, 0, 128, osPriorityNormal);
 	sys_thread_new("set_default_listener", StartSetDefaultListenerRask, 0, 128, osPriorityNormal);
 	sys_thread_new("hard_fault_handle", StartHardFaultHanlerTaskRask, 0, 128, osPriorityNormal);

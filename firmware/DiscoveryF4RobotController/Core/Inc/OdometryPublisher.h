@@ -28,8 +28,8 @@ private:
 	ros::Subscriber<geometry_msgs::PoseWithCovarianceStamped,OdometryPublisher> sub;
 
 
-	WheelPublisher *encoder1 = nullptr;
-	WheelPublisher *encoder2 = nullptr;
+	WheelPublisher *left_encoder = nullptr;
+	WheelPublisher *right_encoder = nullptr;
 
 	ros::Time last_time;
 	ros::Time cur_time;
@@ -49,8 +49,8 @@ public:
 			(*nh).advertise(pub);
 			nh->subscribe(sub);
 
-			encoder1 = leftWheel;
-			encoder2 = rightWheel;
+			left_encoder = leftWheel;
+			right_encoder = rightWheel;
 
 			cur_time = nh->now();
 			last_time = cur_time;
@@ -73,11 +73,11 @@ public:
 		if( xSemaphoreTake( pose_set, portMAX_DELAY) == pdTRUE )
 		{
 
-		float left_travel = encoder1->get_distance() * wheel_radius;
-		float right_travel = encoder2->get_distance() * wheel_radius;
+		float left_travel = left_encoder->get_distance() * wheel_radius;
+		float right_travel = right_encoder->get_distance() * wheel_radius;
 
 //		double delta_time = cur_time.toSec() - last_time.toSec();
-		double delta_time = (encoder1->get_distance_time() + encoder2->get_distance_time()) / 2000.0;
+		double delta_time = (left_encoder->get_distance_time() + right_encoder->get_distance_time()) / 2000.0;
 
 		float pose_x =   odom.pose.pose.position.x;
 		float pose_y =   odom.pose.pose.position.y;
@@ -152,7 +152,6 @@ public:
 		set_pose();
 		last_time = cur_time;
 		pub.publish(&odom);
-
 	}
 
 	void on_initial_pose(const geometry_msgs::PoseWithCovarianceStamped& msg)

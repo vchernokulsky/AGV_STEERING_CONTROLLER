@@ -16,6 +16,7 @@
 #include "WheelPublisher.h"
 #include "CmdVelSubscriber.h"
 #include "OdometryPublisher.h"
+#include "UartLogger.h"
 
 
 class RosHelper {
@@ -31,11 +32,13 @@ private:
 	CmdVelSubscriber cmd_vel;
 	OdometryPublisher odom;
 
+	UartLogger* uart_logger;
+
 	void rosLoop(void);
 public:
 	RosHelper();
 	virtual ~RosHelper();
-	void setupRos(TIM_HandleTypeDef *main_htim, TIM_HandleTypeDef *main_htim2, TIM_HandleTypeDef *encoder_htim, TIM_HandleTypeDef *encoder_htim2, SetUpHelper *main_settings);
+	void setupRos(TIM_HandleTypeDef *main_htim, TIM_HandleTypeDef *main_htim2, TIM_HandleTypeDef *encoder_htim, TIM_HandleTypeDef *encoder_htim2, SetUpHelper *main_settings, UartLogger* main_uart_logger);
 	void setupRos();
 	void RosTask();
 	void setSpeedTask(void);

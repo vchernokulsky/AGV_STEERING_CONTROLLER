@@ -19,10 +19,11 @@ RosHelper::~RosHelper() {
 	// TODO Auto-generated destructor stub
 }
 
-void RosHelper::setupRos(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_htim2, TIM_HandleTypeDef *encoder_htim, TIM_HandleTypeDef *encoder_htim2, SetUpHelper *main_settings)
+void RosHelper::setupRos(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_htim2, TIM_HandleTypeDef *encoder_htim, TIM_HandleTypeDef *encoder_htim2, SetUpHelper *main_settings, UartLogger *main_uart_logger)
 {
 	nh.initNode();
 	settings = main_settings;
+	uart_logger = main_uart_logger;
 
 	//===Right wheel===
 	wheel.set_pins(GPIO_REN1, PIN_REN1, GPIO_LEN1, PIN_LEN1);
@@ -51,6 +52,8 @@ void RosHelper::setupRos(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_
 
 void RosHelper::rosLoop(void)
 {
+	//TODO: remove semaphores as possible
+	TickType_t t1 = xTaskGetTickCount();
 	if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
 	{
 		if (SocketClient::is_connected)
@@ -62,8 +65,12 @@ void RosHelper::rosLoop(void)
 			xSemaphoreGive( SocketClient::error_semaphore );
 		}
 	}
-
-	osDelay(ROS_SPINONCE_DELAY);
+//	osDelay(ROS_SPINONCE_DELAY);
+	TickType_t t2 = xTaskGetTickCount();
+	if(t2 - t1 < ROS_SPINONCE_DELAY)
+		osDelay(ROS_SPINONCE_DELAY - (t2 - t1));
+	else
+		osDelay(1);
 }
 
 void RosHelper::RosTask(void)
