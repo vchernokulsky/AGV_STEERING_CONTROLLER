@@ -2,7 +2,9 @@
 
 #include "SetUpHelper.h"
 #include "SocketClient.h"
+#include "SocketClient2.h"
 #include "SocketServer.h"
+#include "SocketServer2.h"
 #include "RosHelper.h"
 #include "System_config.h"
 #include "UartLogger.h"
@@ -97,12 +99,14 @@ void threds_setup(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_htim2, 
 	//****** Client Task **********
 	sys_thread_new("client_thread", StartSocetClientTask, 0, DEFAULT_THREAD_STACKSIZE * 2, osPriorityNormal);
 	osDelay(500);
+//	sys_thread_new("send_thread", send_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+	//sys_thread_new("tcp_thread", tcp_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
 	sys_thread_new("server_thread", StartSocetServerTask, 0, DEFAULT_THREAD_STACKSIZE * 2, osPriorityNormal);
 	sys_thread_new("ros_thread", StartRosTask, 0, 256, osPriorityNormal);
 	sys_thread_new("wheel1_thread", StartSetSpeedTask, 0, 256, osPriorityNormal);
 	sys_thread_new("wheel2_thread", StartSetSpeedTask2, 0, 256, osPriorityNormal);
 	sys_thread_new("encoder1_thread", StartEncoderTask, 0, 256, osPriorityNormal);
-//	sys_thread_new("encoder2_thread", StartEncoderTask2, 0, 256, osPriorityNormal);
+	sys_thread_new("encoder2_thread", StartEncoderTask2, 0, 256, osPriorityNormal);
 	sys_thread_new("cmdvel_timeout_thread", StartCmdvelTimeoutRask, 0, 128, osPriorityNormal);
 	sys_thread_new("set_default_listener", StartSetDefaultListenerRask, 0, 128, osPriorityNormal);
 	sys_thread_new("hard_fault_handle", StartHardFaultHanlerTaskRask, 0, 128, osPriorityNormal);

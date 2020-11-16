@@ -37,12 +37,12 @@ SocketClient::~SocketClient() {
 void SocketClient::socket_receive(uint8_t *pData, uint16_t size, uint32_t* rdmaInd)
 {
 	osDelay(10);
-	if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
-	{
+	//if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
+	//{
 		recv_data = (SocketClient::is_connected) ? recv(sock, pData, size, 0) : 0;
 		//osDelay(500);
-		xSemaphoreGive( SocketClient::error_semaphore );
-	}
+	//	xSemaphoreGive( SocketClient::error_semaphore );
+	//}
 	*rdmaInd = (recv_data > 0) ? recv_data : 0;
 
 	if( check_errno(recv_data) == ERROR_STATUS){
@@ -56,11 +56,11 @@ void SocketClient::socket_receive(uint8_t *pData, uint16_t size, uint32_t* rdmaI
 
 void SocketClient::socket_send(uint8_t *pData, uint16_t len)
 {
-	if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
-	{
+	//if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
+	//{
 		send_data = (SocketClient::is_connected) ? write(sock,(void *) pData, len) : 0;
-		xSemaphoreGive( SocketClient::error_semaphore );
-	}
+	//	xSemaphoreGive( SocketClient::error_semaphore );
+	//}
 	if( check_errno(send_data) == ERROR_STATUS){
 			++err_count;
 		} else {
