@@ -1,0 +1,419 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+#include "cmsis_os.h"
+#include "lwip.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include "stdint.h"
+#include "string.h"
+
+#include "lwip/opt.h"
+#include "lwip/arch.h"
+#include "lwip/api.h"
+#include "lwip/inet.h"
+#include "lwip/sockets.h"
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+osThreadId defaultTaskHandle;
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+void StartDefaultTask(void const * argument);
+
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+static __attribute__ ((used,section(".user_heap_stack"))) uint8_t heap_sram1[32*1024];
+uint8_t heap_sram2[32*1024];
+
+
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+  /* USER CODE BEGIN 1 */
+	HeapRegion_t xHeapRegions[] =
+  {
+	  {  heap_sram1, sizeof(heap_sram1) },
+	  {  heap_sram2, sizeof(heap_sram2) },
+	  { NULL, 0 }
+  };
+  vPortDefineHeapRegions( xHeapRegions );
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  /* USER CODE BEGIN 2 */
+
+  /* USER CODE END 2 */
+
+  /* USER CODE BEGIN RTOS_MUTEX */
+  /* add mutexes, ... */
+  /* USER CODE END RTOS_MUTEX */
+
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* add semaphores, ... */
+  /* USER CODE END RTOS_SEMAPHORES */
+
+  /* USER CODE BEGIN RTOS_TIMERS */
+  /* start timers, add new ones, ... */
+  /* USER CODE END RTOS_TIMERS */
+
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* add queues, ... */
+  /* USER CODE END RTOS_QUEUES */
+
+  /* Create the thread(s) */
+  /* definition and creation of defaultTask */
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
+  /* USER CODE END RTOS_THREADS */
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  /** Initializes the CPU, AHB and APB busses clocks
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 168;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = 4;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Initializes the CPU, AHB and APB busses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+}
+
+/* USER CODE BEGIN 4 */
+unsigned char out_buffer[250];
+typedef struct struct_client_socket_t {
+  struct sockaddr_in remotehost;
+  socklen_t sockaddrsize;
+  int accept_sock;
+} struct_client_socket;
+struct_client_socket client_socket01;
+static void client_socket_thread(void *arg)
+{
+  int buflen = 150;
+  int ret, accept_sock;
+  struct sockaddr_in remotehost;
+  socklen_t sockaddrsize;
+  struct_client_socket *arg_client_socket;
+  arg_client_socket = (struct_client_socket*) arg;
+  remotehost = arg_client_socket->remotehost;
+  sockaddrsize  = arg_client_socket->sockaddrsize;
+  accept_sock = arg_client_socket->accept_sock;
+
+    ret = recvfrom( accept_sock,out_buffer, buflen, 0, (struct sockaddr *)&remotehost, &sockaddrsize);
+    if(ret > 0)
+    {
+
+        sendto(accept_sock,out_buffer,strlen((char*)out_buffer),0,(struct sockaddr *)&remotehost, sockaddrsize);
+        osDelay(100);
+
+    }
+
+  close(accept_sock);
+  osThreadTerminate(NULL);
+}
+osThreadId ServerSendRecv;
+//---------------------------------------------------------------
+static void tcp_thread(void *arg)
+{
+  int sock, accept_sock;
+  struct sockaddr_in address, remotehost;
+  socklen_t sockaddrsize;
+  if ((sock = socket(AF_INET,SOCK_STREAM, 0)) >= 0)
+  {
+    address.sin_family = AF_INET;
+    address.sin_port = htons(11511);
+    address.sin_addr.s_addr = INADDR_ANY;
+    if (bind(sock, (struct sockaddr *)&address, sizeof (address)) ==  0)
+    {
+    	listen(sock, 5);
+      for(;;)
+      {
+        accept_sock = accept(sock, (struct sockaddr *)&remotehost, (socklen_t *)&sockaddrsize);
+        if(accept_sock >= 0)
+        {
+
+          client_socket01.accept_sock = accept_sock;
+          client_socket01.remotehost = remotehost;
+          client_socket01.sockaddrsize = sockaddrsize;
+          ServerSendRecv = sys_thread_new("client_socket_thread", client_socket_thread, (void*)&client_socket01, DEFAULT_THREAD_STACKSIZE, osPriorityNormal );
+          __NOP();
+        }
+      }
+    }
+    else
+    {
+      close(sock);
+      return;
+    }
+  }
+}
+
+//==========================================================================
+typedef struct struct_recv_socket_t {
+  int sock;
+} struct_recv_socket;
+struct_recv_socket recv_socket01;
+osThreadId ThreadRecvHandle;
+
+
+//---------------------------------------------------------------
+static void recv_thread(void *arg)
+{
+  struct_recv_socket *arg_recv_socket;
+  arg_recv_socket = (struct_recv_socket*) arg;
+  int recv_data;
+  char data_buffer[30] = {};
+  for(;;)
+  {
+    recv_data = recv(arg_recv_socket->sock,data_buffer,sizeof(data_buffer),0);
+    if(recv_data > 0)
+    {
+    	__NOP();
+    }
+  }
+}
+//---------------------------------------------------------------
+static void send_thread(void *arg)
+{
+  int sock;
+  struct sockaddr_in localhost, remotehost;
+  uint32_t syscnt = 0;
+  char buf[50] = "01234567890123456789012345678901234567890123456789";
+  if ((sock = socket(AF_INET,SOCK_STREAM, 0)) >= 0)
+  {
+    memset(&localhost, 0, sizeof(struct sockaddr_in));
+    localhost.sin_family = AF_INET;
+    localhost.sin_port = htons(11411);
+    localhost.sin_addr.s_addr = INADDR_ANY;
+    if (bind(sock, (struct sockaddr *)&localhost, sizeof(struct sockaddr_in)) ==  0)
+    {
+      memset(&remotehost, 0, sizeof(struct sockaddr_in));
+      remotehost.sin_family = AF_INET;
+      remotehost.sin_port = htons(5446);
+      ip4addr_aton("192.168.55.52",(ip4_addr_t*)&remotehost.sin_addr);
+      if (connect(sock, (struct sockaddr *)&remotehost,sizeof(struct sockaddr_in)) >= 0)
+      {
+
+        recv_socket01.sock = sock;
+        ThreadRecvHandle = sys_thread_new("recv_thread", recv_thread, (void*)&recv_socket01, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+        for(;;)
+        {
+          syscnt = osKernelSysTick();
+          write(sock,(void *) buf,strlen(buf));
+          osDelay(20);
+        }
+      }
+    }
+    else
+    {
+      close(sock);
+      return;
+    }
+  }
+}
+
+/* USER CODE END 4 */
+
+/* USER CODE BEGIN Header_StartDefaultTask */
+/**
+  * @brief  Function implementing the defaultTask thread.
+  * @param  argument: Not used
+  * @retval None
+  */
+/* USER CODE END Header_StartDefaultTask */
+void StartDefaultTask(void const * argument)
+{
+  /* init code for LWIP */
+  MX_LWIP_Init();
+  /* USER CODE BEGIN 5 */
+  sys_thread_new("tcp_thread", tcp_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+  sys_thread_new("send_thread", send_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END 5 */
+}
+
+ /**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM1 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM1) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+
+  /* USER CODE END Error_Handler_Debug */
+}
+
+#ifdef  USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  /* USER CODE BEGIN 6 */
+  /* User can add his own implementation to report the file name and line number,
+     tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* USER CODE END 6 */
+}
+#endif /* USE_FULL_ASSERT */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
