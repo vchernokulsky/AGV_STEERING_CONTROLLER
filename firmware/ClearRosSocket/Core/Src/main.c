@@ -33,6 +33,10 @@
 #include "lwip/api.h"
 #include "lwip/inet.h"
 #include "lwip/sockets.h"
+
+#include "RosHelper.h"
+#include "SocketClient.h"
+#include "SocketServer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -210,137 +214,9 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-unsigned char out_buffer[250];
-typedef struct struct_client_socket_t {
-  struct sockaddr_in remotehost;
-  socklen_t sockaddrsize;
-  int accept_sock;
-} struct_client_socket;
-struct_client_socket client_socket01;
-static void client_socket_thread(void *arg)
-{
-  int buflen = 150;
-  int ret, accept_sock;
-  struct sockaddr_in remotehost;
-  socklen_t sockaddrsize;
-  struct_client_socket *arg_client_socket;
-  arg_client_socket = (struct_client_socket*) arg;
-  remotehost = arg_client_socket->remotehost;
-  sockaddrsize  = arg_client_socket->sockaddrsize;
-  accept_sock = arg_client_socket->accept_sock;
-
-    ret = recvfrom( accept_sock,out_buffer, buflen, 0, (struct sockaddr *)&remotehost, &sockaddrsize);
-    if(ret > 0)
-    {
-
-        sendto(accept_sock,out_buffer,strlen((char*)out_buffer),0,(struct sockaddr *)&remotehost, sockaddrsize);
-        osDelay(100);
-
-    }
-
-  close(accept_sock);
-  osThreadTerminate(NULL);
-}
-osThreadId ServerSendRecv;
-//---------------------------------------------------------------
-static void tcp_thread(void *arg)
-{
-  int sock, accept_sock;
-  struct sockaddr_in address, remotehost;
-  socklen_t sockaddrsize;
-  if ((sock = socket(AF_INET,SOCK_STREAM, 0)) >= 0)
-  {
-    address.sin_family = AF_INET;
-    address.sin_port = htons(11511);
-    address.sin_addr.s_addr = INADDR_ANY;
-    if (bind(sock, (struct sockaddr *)&address, sizeof (address)) ==  0)
-    {
-    	listen(sock, 5);
-      for(;;)
-      {
-        accept_sock = accept(sock, (struct sockaddr *)&remotehost, (socklen_t *)&sockaddrsize);
-        if(accept_sock >= 0)
-        {
-
-          client_socket01.accept_sock = accept_sock;
-          client_socket01.remotehost = remotehost;
-          client_socket01.sockaddrsize = sockaddrsize;
-          ServerSendRecv = sys_thread_new("client_socket_thread", client_socket_thread, (void*)&client_socket01, DEFAULT_THREAD_STACKSIZE, osPriorityNormal );
-          __NOP();
-        }
-      }
-    }
-    else
-    {
-      close(sock);
-      return;
-    }
-  }
-}
-
-//==========================================================================
-typedef struct struct_recv_socket_t {
-  int sock;
-} struct_recv_socket;
-struct_recv_socket recv_socket01;
-osThreadId ThreadRecvHandle;
 
 
-//---------------------------------------------------------------
-static void recv_thread(void *arg)
-{
-  struct_recv_socket *arg_recv_socket;
-  arg_recv_socket = (struct_recv_socket*) arg;
-  int recv_data;
-  char data_buffer[30] = {};
-  for(;;)
-  {
-    recv_data = recv(arg_recv_socket->sock,data_buffer,sizeof(data_buffer),0);
-    if(recv_data > 0)
-    {
-    	__NOP();
-    }
-  }
-}
-//---------------------------------------------------------------
-static void send_thread(void *arg)
-{
-  int sock;
-  struct sockaddr_in localhost, remotehost;
-  uint32_t syscnt = 0;
-  char buf[50] = "01234567890123456789012345678901234567890123456789";
-  if ((sock = socket(AF_INET,SOCK_STREAM, 0)) >= 0)
-  {
-    memset(&localhost, 0, sizeof(struct sockaddr_in));
-    localhost.sin_family = AF_INET;
-    localhost.sin_port = htons(11411);
-    localhost.sin_addr.s_addr = INADDR_ANY;
-    if (bind(sock, (struct sockaddr *)&localhost, sizeof(struct sockaddr_in)) ==  0)
-    {
-      memset(&remotehost, 0, sizeof(struct sockaddr_in));
-      remotehost.sin_family = AF_INET;
-      remotehost.sin_port = htons(5446);
-      ip4addr_aton("192.168.55.52",(ip4_addr_t*)&remotehost.sin_addr);
-      if (connect(sock, (struct sockaddr *)&remotehost,sizeof(struct sockaddr_in)) >= 0)
-      {
 
-        recv_socket01.sock = sock;
-        ThreadRecvHandle = sys_thread_new("recv_thread", recv_thread, (void*)&recv_socket01, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
-        for(;;)
-        {
-          syscnt = osKernelSysTick();
-          write(sock,(void *) buf,strlen(buf));
-          osDelay(20);
-        }
-      }
-    }
-    else
-    {
-      close(sock);
-      return;
-    }
-  }
-}
 
 /* USER CODE END 4 */
 
@@ -358,6 +234,7 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN 5 */
   sys_thread_new("tcp_thread", tcp_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
   sys_thread_new("send_thread", send_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+  sys_thread_new("ros_thread", ros_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
   /* Infinite loop */
   for(;;)
   {
