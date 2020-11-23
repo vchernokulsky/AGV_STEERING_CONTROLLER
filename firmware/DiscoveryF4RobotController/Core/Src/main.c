@@ -135,7 +135,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, DEFAULT_THREAD_STACKSIZE);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 512);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -620,7 +620,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void StartDefaultTask(void const * argument)
 {
   /* init code for LWIP */
-  //MX_LWIP_Init();
+//  MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
   run_app(&huart1, &hi2c1, &htim3, &htim4, &htim8, &htim1);
   /* Infinite loop */

@@ -113,12 +113,16 @@ void HardFault_Handler(void)
 	      "MRSNE %[ptr], PSP  \n"  //Нет, сохраняем указатель стека процесса
 	      : [ptr] "=r" (stack_ptr)
 	      );
-	  volatile uint32_t EPSR = 0xFFFFFFFF;
-
-	    asm(
-	      "MRS %[epsr], PSP  \n"
-	      : [epsr] "=r" (EPSR)
-	        );
+		volatile uint32_t *cfsr = (volatile uint32_t *)0xE000ED28;
+		volatile uint16_t *ufsr = (volatile uint16_t *)0xE000ED2A;
+		volatile uint8_t *bfsr = (volatile uint8_t *)0xE000ED29;
+		volatile uint8_t *mmfsr = (volatile uint8_t *)0xE000ED28;
+//	  volatile uint32_t EPSR = 0xFFFFFFFF;
+//
+//	    asm(
+//	      "MRS %[epsr], PSP  \n"
+//	      : [epsr] "=r" (EPSR)
+//	        );
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
