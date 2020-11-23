@@ -234,7 +234,7 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN 5 */
   sys_thread_new("tcp_thread", tcp_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
   sys_thread_new("send_thread", send_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
-  sys_thread_new("ros_thread", ros_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+//  sys_thread_new("ros_thread", ros_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
   /* Infinite loop */
   for(;;)
   {

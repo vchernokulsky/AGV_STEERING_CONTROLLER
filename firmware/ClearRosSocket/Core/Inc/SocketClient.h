@@ -69,28 +69,36 @@ static void send_thread(void *arg)
   struct sockaddr_in localhost, remotehost;
   if ((sock = socket(AF_INET,SOCK_STREAM, 0)) >= 0)
   {
+
     memset(&localhost, 0, sizeof(struct sockaddr_in));
     localhost.sin_family = AF_INET;
-    localhost.sin_port = htons(11411);
+    localhost.sin_port = htons(5448);
     localhost.sin_addr.s_addr = INADDR_ANY;
     if (bind(sock, (struct sockaddr *)&localhost, sizeof(struct sockaddr_in)) ==  0)
     {
       memset(&remotehost, 0, sizeof(struct sockaddr_in));
       remotehost.sin_family = AF_INET;
-      remotehost.sin_port = htons(5448);
+      remotehost.sin_port = htons(11411);
       ip4addr_aton("192.168.55.52",(ip4_addr_t*)&remotehost.sin_addr);
-      if (connect(sock, (struct sockaddr *)&remotehost,sizeof(struct sockaddr_in)) >= 0)
-      {
-
-        recv_socket01.sock = sock;
-//        ThreadRecvHandle = sys_thread_new("recv_thread", recv_thread, (void*)&recv_socket01, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
-//        ThreadWriteHandle = sys_thread_new("write_thread", write_thread, (void*)&recv_socket01, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
-//        char buf[51] = "01234567890123456789012345678901234567890123456789";
-          for(;;)
-          {
-//        	  write(sock,(void *) buf,strlen(buf));
-        	  osDelay(20);
-          }
+      lwip_fcntl(sock, F_SETFL, (lwip_fcntl(sock, F_GETFL, 0)| O_NONBLOCK));
+      osDelay(10);
+      for(;;){
+    	  connect(sock, (struct sockaddr *)&remotehost,sizeof(struct sockaddr_in));
+    	  if(errno == EINPROGRESS || errno == 0)
+		  {
+			recv_socket01.sock = sock;
+			sys_thread_new("ros_thread", ros_thread, NULL, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+	//        ThreadRecvHandle = sys_thread_new("recv_thread", recv_thread, (void*)&recv_socket01, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+	//        ThreadWriteHandle = sys_thread_new("write_thread", write_thread, (void*)&recv_socket01, DEFAULT_THREAD_STACKSIZE, osPriorityNormal);
+	//        char buf[51] = "01234567890123456789012345678901234567890123456789";
+			  for(;;)
+			  {
+	//        	  write(sock,(void *) buf,strlen(buf));
+				  osDelay(20);
+			  }
+		  } else {
+			  osDelay(500);
+		  }
       }
     }
     else

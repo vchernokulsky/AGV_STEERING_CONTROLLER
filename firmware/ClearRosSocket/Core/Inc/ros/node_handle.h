@@ -162,48 +162,47 @@ public:
 	// Custom spinOnce
 	   uint16_t msg_len;
 
-	            uint32_t c_time = hardware_.time();
+	uint32_t c_time = hardware_.time();
 
-	            if ((c_time - last_sync_receive_time) > (SYNC_SECONDS * 2200))
-	            {
-	              configured_ = false;
-	            }
+	if ((c_time - last_sync_receive_time) > (SYNC_SECONDS * 2200))
+	{
+	  configured_ = false;
+	}
 
-	            if (hardware_.read_stm32hw((uint8_t*) message_in, 4)){
-	            	msg_len = (uint16_t)(message_in[1] << 8) + (uint16_t) message_in[0];
-	            	topic_ = (uint16_t)(message_in[3] << 8) + (uint16_t) message_in[2];
-	            	if (msg_len > INPUT_SIZE || msg_len < 0) {
-						return SPIN_ERR;
-					}
-	            	if(hardware_.read_stm32hw((uint8_t*) message_in, msg_len)){
-						if (topic_ == TopicInfo::ID_TIME) {
-							syncTime(message_in);
-						} else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
-							req_param_resp.deserialize(message_in);
-							param_recieved = true;
-						} else if (topic_ == 0) {
-							requestSyncTime();
-							negotiateTopics();
-							last_sync_time = c_time;
-							last_sync_receive_time = c_time;
-							return SPIN_ERR;
-						} else if (topic_ == TopicInfo::ID_TX_STOP) {
-							configured_ = false;
-						} else {
-							if (subscribers[topic_ - 100]) {
-								subscribers[topic_ - 100]->callback(message_in);
-							}
-						}
-					}
-	            }
+	if (hardware_.read_stm32hw((uint8_t*) message_in, 4)){
+		msg_len = (uint16_t)(message_in[1] << 8) + (uint16_t) message_in[0];
+		topic_ = (uint16_t)(message_in[3] << 8) + (uint16_t) message_in[2];
+		if (msg_len > INPUT_SIZE || msg_len < 0) {
+			return SPIN_ERR;
+		}
 
-	            if (configured_ && ((c_time - last_sync_time) > (SYNC_SECONDS * 500)))
-				{
-				  requestSyncTime();
-				  last_sync_time = c_time;
-				}
+		if (topic_ == 0) {
+			requestSyncTime();
+			negotiateTopics();
+			last_sync_time = c_time;
+			last_sync_receive_time = c_time;
+			return SPIN_ERR;
+		} else if (topic_ == TopicInfo::ID_TX_STOP) {
+			configured_ = false;
+		} else if (subscribers[topic_ - 100]) {
+			subscribers[topic_ - 100]->callback(message_in);
+		} else if(hardware_.read_stm32hw((uint8_t*) message_in, msg_len)){
+			if (topic_ == TopicInfo::ID_TIME) {
+				syncTime(message_in);
+			} else if (topic_ == TopicInfo::ID_PARAMETER_REQUEST) {
+				req_param_resp.deserialize(message_in);
+				param_recieved = true;
+			}
+		}
+	}
 
-	            return SPIN_OK;
+	if (configured_ && ((c_time - last_sync_time) > (SYNC_SECONDS * 500)))
+	{
+	  requestSyncTime();
+	  last_sync_time = c_time;
+	}
+
+	return SPIN_OK;
   }
 
   virtual bool connected()

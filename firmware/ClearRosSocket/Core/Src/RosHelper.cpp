@@ -6,12 +6,20 @@
  */
 #include "RosHelper.h"
 #include "ros.h"
+#include <std_msgs/String.h>
 
 void ros_thread(void* arg){
 	ros::NodeHandle nh;
+	std_msgs::String str_msg;
+	ros::Publisher chatter("chatter", &str_msg);
+
 	nh.initNode();
+	nh.advertise(chatter);
+	str_msg.data = "Hello world!";
 	for(;;){
-		osDelay(1);
+		chatter.publish(&str_msg);
+		nh.spinOnce();
+		osDelay(500);
 	}
 }
 
