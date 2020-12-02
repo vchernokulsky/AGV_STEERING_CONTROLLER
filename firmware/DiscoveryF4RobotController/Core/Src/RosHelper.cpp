@@ -54,17 +54,12 @@ void RosHelper::rosLoop(void)
 {
 	//TODO: remove semaphores as possible
 	TickType_t t1 = xTaskGetTickCount();
-	if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
+	if (SocketClient::is_connected)
 	{
-		if (SocketClient::is_connected)
-		{
-			xSemaphoreGive( SocketClient::error_semaphore );
-			odom.publish();
-			nh.spinOnce();
-		}else {
-			xSemaphoreGive( SocketClient::error_semaphore );
-		}
+		odom.publish();
+		nh.spinOnce();
 	}
+
 //	osDelay(ROS_SPINONCE_DELAY);
 	TickType_t t2 = xTaskGetTickCount();
 	if(t2 - t1 < ROS_SPINONCE_DELAY)

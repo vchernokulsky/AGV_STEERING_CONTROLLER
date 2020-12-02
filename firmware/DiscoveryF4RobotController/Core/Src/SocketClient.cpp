@@ -7,7 +7,6 @@
 
 #include "SocketClient.h"
 
-SemaphoreHandle_t SocketClient::error_semaphore;
 bool SocketClient::is_connected = false;
 
 SocketClient::SocketClient( )
@@ -17,8 +16,6 @@ SocketClient::SocketClient( )
 
 void SocketClient::init(uint16_t ros_local_port, uint8_t *remote_ip, uint16_t ros_serialnode_port)
 {
-	SocketClient::error_semaphore = xSemaphoreCreateMutex();
-
 	memset(&localhost, 0, sizeof(struct sockaddr_in));
 	localhost.sin_family = AF_INET;
 	localhost.sin_port = htons(ros_local_port);
@@ -74,42 +71,27 @@ void SocketClient::SocketClientTask()
 {
 	for(;;)
 	{
-		if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
-		{
-			sock = socket(AF_INET,SOCK_STREAM, 0);
-			xSemaphoreGive( SocketClient::error_semaphore );
-		}
+		sock = socket(AF_INET,SOCK_STREAM, 0);
 
 		if (sock >= 0)
 		{
 			err_count = 0;
 			osDelay(10);
-			if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
-			{
-				lwip_fcntl(sock, F_SETFL, (lwip_fcntl(sock, F_GETFL, 0)| O_NONBLOCK));
-				osDelay(10);
-				connect(sock, (struct sockaddr *)&remotehost,sizeof(struct sockaddr_in));
-				osDelay(400);
-				xSemaphoreGive( SocketClient::error_semaphore );
-			}
+			lwip_fcntl(sock, F_SETFL, (lwip_fcntl(sock, F_GETFL, 0)| O_NONBLOCK));
+			osDelay(10);
+			connect(sock, (struct sockaddr *)&remotehost,sizeof(struct sockaddr_in));
+			osDelay(400);
+
 			if (check_errno() == OK_STATUS)
 			{
 				osDelay(500);
-				if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
-				{
-					SocketClient::is_connected = true;
-					osDelay(500);
-					xSemaphoreGive( SocketClient::error_semaphore );
-				}
-				osDelay(100);
+				SocketClient::is_connected = true;
+				osDelay(500);
+
 				for(;;){
 					if(err_count > MAX_ERROR_COUNT){
 						HAL_GPIO_WritePin(GPIO_LWIP_LED, PIN_LWIP_LED, GPIO_PIN_RESET);
-						if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
-						{
-							SocketClient::is_connected = false;
-							xSemaphoreGive( SocketClient::error_semaphore );
-						}
+						SocketClient::is_connected = false;
 						break;
 					} else
 					{
@@ -118,12 +100,8 @@ void SocketClient::SocketClientTask()
 					osDelay(10);
 				}
 			}
-			if( xSemaphoreTake( SocketClient::error_semaphore, portMAX_DELAY) == pdTRUE )
-			{
-				close(sock);
-				osDelay(500);
-				xSemaphoreGive( SocketClient::error_semaphore );
-			}
+			close(sock);
+			osDelay(500);
 		}
 		osDelay(100);
 	}

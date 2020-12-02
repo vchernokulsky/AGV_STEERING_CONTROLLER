@@ -71,78 +71,78 @@ public:
 
 	void set_pose(){
 		if( xSemaphoreTake( pose_set, portMAX_DELAY) == pdTRUE )
+
 		{
+			float left_travel = left_encoder->get_distance() * wheel_radius;
+			float right_travel = right_encoder->get_distance() * wheel_radius;
 
-		float left_travel = left_encoder->get_distance() * wheel_radius;
-		float right_travel = right_encoder->get_distance() * wheel_radius;
+	//		double delta_time = cur_time.toSec() - last_time.toSec();
+			double delta_time = (left_encoder->get_distance_time() + right_encoder->get_distance_time()) / 2000.0;
 
-//		double delta_time = cur_time.toSec() - last_time.toSec();
-		double delta_time = (left_encoder->get_distance_time() + right_encoder->get_distance_time()) / 2000.0;
+			float pose_x =   odom.pose.pose.position.x;
+			float pose_y =   odom.pose.pose.position.y;
 
-		float pose_x =   odom.pose.pose.position.x;
-		float pose_y =   odom.pose.pose.position.y;
-
-		float x_vel = 0;
-		float theta_vel = 0;
+			float x_vel = 0;
+			float theta_vel = 0;
 
 
-        float delta_travel = (right_travel + left_travel) / 2.0;
-        float delta_theta = (right_travel - left_travel) / wheel_separetion;
+			float delta_travel = (right_travel + left_travel) / 2.0;
+			float delta_theta = (right_travel - left_travel) / wheel_separetion;
 
-        float delta_x = 0;
-        float delta_y = 0;
+			float delta_x = 0;
+			float delta_y = 0;
 
-        if (right_travel == left_travel)
-        {
-            delta_x = left_travel * cos(theta);
-            delta_y = left_travel * sin(theta);
-        }
-        else
-        {
+			if (right_travel == left_travel)
+			{
+				delta_x = left_travel * cos(theta);
+				delta_y = left_travel * sin(theta);
+			}
+			else
+			{
 
-            float radius = (delta_theta == 0)? 0 : delta_travel / delta_theta;
+				float radius = (delta_theta == 0)? 0 : delta_travel / delta_theta;
 
-            float icc_x = pose_x - radius * sin(theta);
-            float icc_y = pose_y + radius * cos(theta);
+				float icc_x = pose_x - radius * sin(theta);
+				float icc_y = pose_y + radius * cos(theta);
 
-            delta_x = cos(delta_theta) * (pose_x - icc_x) - sin(delta_theta) * (pose_y - icc_y) + icc_x - pose_x;
-            delta_y = sin(delta_theta) * (pose_x - icc_x) + cos(delta_theta) * (pose_y - icc_y) + icc_y - pose_y;
-        }
-        pose_x += delta_x;
+				delta_x = cos(delta_theta) * (pose_x - icc_x) - sin(delta_theta) * (pose_y - icc_y) + icc_x - pose_x;
+				delta_y = sin(delta_theta) * (pose_x - icc_x) + cos(delta_theta) * (pose_y - icc_y) + icc_y - pose_y;
+			}
+			pose_x += delta_x;
 
-        pose_y += delta_y;
-        theta += delta_theta;
-        while (theta > 2.0 * PI){
-        	theta -= 2.0 * PI;
-        }
+			pose_y += delta_y;
+			theta += delta_theta;
+			while (theta > 2.0 * PI){
+				theta -= 2.0 * PI;
 
-		if (delta_time > 0){
-			x_vel = delta_travel / delta_time;
-			theta_vel = delta_theta / delta_time;
-		}
+			}
+			if (delta_time > 0){
+				x_vel = delta_travel / delta_time;
+				theta_vel = delta_theta / delta_time;
+			}
 
-		geometry_msgs::Quaternion q = tf::createQuaternionFromYaw(theta);
+			geometry_msgs::Quaternion q = tf::createQuaternionFromYaw(theta);
 
-		transform.header.stamp = cur_time;
-		transform.transform.translation.x = pose_x;
-		transform.transform.translation.y = pose_y;
-		transform.transform.translation.z = 0;
-		transform.transform.rotation = q;
-		tf_broadcaster.sendTransform(transform);
-		if(pose_x == 0 && pose_y == 0){
+			transform.header.stamp = cur_time;
+			transform.transform.translation.x = pose_x;
+			transform.transform.translation.y = pose_y;
+			transform.transform.translation.z = 0;
+			transform.transform.rotation = q;
 			tf_broadcaster.sendTransform(transform);
-		}
+			if(pose_x == 0 && pose_y == 0){
+				tf_broadcaster.sendTransform(transform);
+			}
 
 
-		odom.header.stamp = cur_time;
+			odom.header.stamp = cur_time;
 
-		 odom.pose.pose.position.x = pose_x;
-		 odom.pose.pose.position.y = pose_y;
-		 odom.pose.pose.orientation = q;
-		 odom.twist.twist.linear.x = x_vel;
-		 odom.twist.twist.angular.z = theta_vel;
+			 odom.pose.pose.position.x = pose_x;
+			 odom.pose.pose.position.y = pose_y;
+			 odom.pose.pose.orientation = q;
+			 odom.twist.twist.linear.x = x_vel;
+			 odom.twist.twist.angular.z = theta_vel;
 
-		 xSemaphoreGive( pose_set );
+			 xSemaphoreGive( pose_set );
 		}
 
 	}

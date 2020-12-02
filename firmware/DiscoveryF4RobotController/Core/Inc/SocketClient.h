@@ -46,7 +46,6 @@ private:
 	uint8_t check_errno();
 	uint8_t check_errno(int bytes);
 public:
-	static SemaphoreHandle_t error_semaphore;
 	static bool is_connected;
 	SocketClient();
 	virtual ~SocketClient();
