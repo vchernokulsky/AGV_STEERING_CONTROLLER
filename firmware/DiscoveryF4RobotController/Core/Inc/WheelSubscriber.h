@@ -123,13 +123,13 @@ public:
 			len_val = GPIO_PIN_RESET;
 			ren_val = GPIO_PIN_SET;
 		}
-//		HAL_GPIO_WritePin(gpio_ren, pin_ren, ren_val);
-//		HAL_GPIO_WritePin(gpio_len, pin_len, len_val);
-//		__HAL_TIM_SetCompare(htim, Channel_rev, speed);
+		HAL_GPIO_WritePin(gpio_ren, pin_ren, ren_val);
+		HAL_GPIO_WritePin(gpio_len, pin_len, len_val);
+		__HAL_TIM_SetCompare(htim, Channel_rev, speed);
 
-		HAL_GPIO_WritePin(gpio_ren, pin_ren, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(gpio_len, pin_len, GPIO_PIN_RESET);
-		__HAL_TIM_SetCompare(htim, Channel_rev, 255);
+//		HAL_GPIO_WritePin(gpio_ren, pin_ren, GPIO_PIN_SET);
+//		HAL_GPIO_WritePin(gpio_len, pin_len, GPIO_PIN_RESET);
+//		__HAL_TIM_SetCompare(htim, Channel_rev, 255);
 
 
 	}

@@ -71,7 +71,7 @@ private:
             left_linear *= factor;
 			right_linear *= factor;
     	}
-    	if ((left_linear < -max_lin_speed)or(right_linear < -max_lin_speed)){
+    	if ((left_linear < -max_lin_speed)or(right_linear > max_lin_speed)){
 			float factor = max_lin_speed / min(left_linear, right_linear);
 			left_linear *= factor;
 			right_linear *= factor;

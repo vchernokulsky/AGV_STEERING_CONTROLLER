@@ -342,6 +342,7 @@ public:
         }
       }
       configured_ = true;
+//      osDelay(500);
     }
 
   virtual int publish(int id, const Msg * msg)
