@@ -100,7 +100,6 @@ public:
 	}
 
 	float get_tick_per_sek(){
-		// speed in %
 		return tick_per_sek;
 	}
 

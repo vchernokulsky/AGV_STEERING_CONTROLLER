@@ -31,8 +31,8 @@
 #define DEFAULT_RADIUS 0.1
 #define DEFAULT_WHEEL_SEPARATION 0.45
 
-#define DEFAULT_MAX_LIN_SPEED 0.9
-#define DEFAULT_ANG_VEL_MAX 0.2
+#define DEFAULT_MAX_LIN_SPEED 2.0
+#define DEFAULT_ANG_VEL_MAX 2.0
 
 /************* Motor driver type ***************/
 /** for BB driver required only LEN, REN RPWM **/
