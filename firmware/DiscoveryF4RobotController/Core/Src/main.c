@@ -211,6 +211,7 @@ static void MX_I2C1_Init(void)
 {
 
   /* USER CODE BEGIN I2C1_Init 0 */
+	HAL_I2C_DeInit(&hi2c1);
 
   /* USER CODE END I2C1_Init 0 */
 
@@ -245,7 +246,7 @@ static void MX_TIM1_Init(void)
 {
 
   /* USER CODE BEGIN TIM1_Init 0 */
-
+	HAL_TIM_Encoder_DeInit(&htim1);
   /* USER CODE END TIM1_Init 0 */
 
   TIM_Encoder_InitTypeDef sConfig = {0};
@@ -295,7 +296,7 @@ static void MX_TIM3_Init(void)
 {
 
   /* USER CODE BEGIN TIM3_Init 0 */
-
+	HAL_TIM_Base_DeInit(&htim3);
   /* USER CODE END TIM3_Init 0 */
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
@@ -358,7 +359,7 @@ static void MX_TIM4_Init(void)
 {
 
   /* USER CODE BEGIN TIM4_Init 0 */
-
+	HAL_TIM_Base_DeInit(&htim4);
   /* USER CODE END TIM4_Init 0 */
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
@@ -421,7 +422,7 @@ static void MX_TIM8_Init(void)
 {
 
   /* USER CODE BEGIN TIM8_Init 0 */
-
+	HAL_TIM_Encoder_DeInit(&htim8);
   /* USER CODE END TIM8_Init 0 */
 
   TIM_Encoder_InitTypeDef sConfig = {0};
@@ -471,7 +472,7 @@ static void MX_USART1_UART_Init(void)
 {
 
   /* USER CODE BEGIN USART1_Init 0 */
-
+	HAL_UART_DeInit(&huart1);
   /* USER CODE END USART1_Init 0 */
 
   /* USER CODE BEGIN USART1_Init 1 */
@@ -519,6 +520,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, EEPROM_LED_Pin|GPIO_PIN_11|GPIO_PIN_12|USR_LED_Pin
                           |Audio_RST_Pin|LWIP_LED_Pin, GPIO_PIN_RESET);
 
@@ -550,6 +554,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : EEPROM_LED_Pin PD11 PD12 USR_LED_Pin
                            Audio_RST_Pin LWIP_LED_Pin */

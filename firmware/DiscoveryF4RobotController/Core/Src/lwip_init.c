@@ -47,6 +47,10 @@ bool dhcp_setup_time_up;
   */
 
 void LWIP_Init(bool use_dhcp) {
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
+	osDelay(1);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
+
 	tcpip_init( NULL, NULL );
 
 	if (!use_dhcp) {
