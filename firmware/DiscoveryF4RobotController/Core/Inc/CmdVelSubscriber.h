@@ -78,8 +78,8 @@ private:
 		}
     }
     void calculate_speeds(){
-		left_linear = (2 * linear + wheel_separation * angular) / 2;
-		right_linear = (2 * linear - wheel_separation * angular) / 2;
+		left_linear = (2 * linear - wheel_separation * angular) / 2;
+		right_linear = (2 * linear + wheel_separation * angular) / 2;
 		adjust_speeds();
     }
 public:
