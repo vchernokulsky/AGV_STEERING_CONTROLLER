@@ -129,9 +129,9 @@ public:
 			transform.transform.translation.z = 0;
 			transform.transform.rotation = q;
 			tf_broadcaster.sendTransform(transform);
-			if(pose_x == 0 && pose_y == 0){
-				tf_broadcaster.sendTransform(transform);
-			}
+//			if(pose_x == 0 && pose_y == 0){
+//				tf_broadcaster.sendTransform(transform);
+//			}
 
 
 			odom.header.stamp = cur_time;
