@@ -25,7 +25,7 @@
 #define ERROR_STATUS 2
 #define UNKNOWN_STATUS 3
 
-#define MAX_ERROR_COUNT 1000
+#define MAX_ERROR_COUNT 100
 #define RECV_WAIT_NUM 100
 
 
