@@ -71,6 +71,7 @@ void SocketClient::SocketClientTask()
 {
 	for(;;)
 	{
+		HAL_GPIO_TogglePin(GPIO_LWIP_LED, PIN_LWIP_LED);
 		sock = socket(AF_INET,SOCK_STREAM, 0);
 
 		if (sock >= 0)
@@ -90,7 +91,6 @@ void SocketClient::SocketClientTask()
 
 				for(;;){
 					if(err_count > MAX_ERROR_COUNT){
-						HAL_GPIO_WritePin(GPIO_LWIP_LED, PIN_LWIP_LED, GPIO_PIN_RESET);
 						SocketClient::is_connected = false;
 						break;
 					} else
