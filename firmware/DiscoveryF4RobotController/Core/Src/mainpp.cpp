@@ -18,7 +18,7 @@ void StartSocetClientTask(void *arg);
 void StartSocetServerTask(void *arg);
 void StartRosTask(void *arg);
 void StartSetSpeedTask(void *arg);
-void StartSetSpeedTask2(void *arg);
+//void StartSetSpeedTask2(void *arg);
 void StartEncoderTask(void *arg);
 void StartEncoderTask2(void *arg);
 void StartCmdvelTimeoutRask(void *arg);
@@ -102,7 +102,7 @@ void threds_setup(TIM_HandleTypeDef *main_htim,  TIM_HandleTypeDef *main_htim2, 
 	sys_thread_new("server_thread", StartSocetServerTask, 0, DEFAULT_THREAD_STACKSIZE * 2, osPriorityNormal);
 	sys_thread_new("ros_thread", StartRosTask, 0, 256, osPriorityNormal);
 	sys_thread_new("wheel1_thread", StartSetSpeedTask, 0, 256, osPriorityNormal);
-	sys_thread_new("wheel2_thread", StartSetSpeedTask2, 0, 256, osPriorityNormal);
+//	sys_thread_new("wheel2_thread", StartSetSpeedTask2, 0, 256, osPriorityNormal);
 	sys_thread_new("encoder1_thread", StartEncoderTask, 0, 256, osPriorityNormal);
 	sys_thread_new("encoder2_thread", StartEncoderTask2, 0, 256, osPriorityNormal);
 	sys_thread_new("cmdvel_timeout_thread", StartCmdvelTimeoutRask, 0, 128, osPriorityNormal);
@@ -152,10 +152,10 @@ void StartSetSpeedTask(void *arg)
 {
 	ros_helper.setSpeedTask();
 }
-void StartSetSpeedTask2(void *arg)
-{
-	ros_helper.setSpeedTask2();
-}
+//void StartSetSpeedTask2(void *arg)
+//{
+//	ros_helper.setSpeedTask2();
+//}
 
 void StartEncoderTask(void *arg)
 {

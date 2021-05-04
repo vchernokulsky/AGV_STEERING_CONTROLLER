@@ -81,18 +81,19 @@ void RosHelper::setSpeedTask(void)
 	for(;;)
 	{
 		wheel.set_speed(encoder.get_speed());
-		osDelay(SET_SPEED_DELAY);
-	}
-}
-
-void RosHelper::setSpeedTask2(void)
-{
-	for(;;)
-	{
 		wheel2.set_speed(encoder2.get_speed());
 		osDelay(SET_SPEED_DELAY);
 	}
 }
+
+//void RosHelper::setSpeedTask2(void)
+//{
+//	for(;;)
+//	{
+//		wheel2.set_speed(encoder2.get_speed());
+//		osDelay(SET_SPEED_DELAY);
+//	}
+//}
 
 void RosHelper::encoderTask(void)
 {
